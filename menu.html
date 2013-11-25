@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Screen Perfect Daimio Prototype Admin</title>
+  <script type="text/javascript" src="/daimio_composite.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/public/css/bootstrap.css" rel="stylesheet">
+    <link href="/public/css/styles.css" rel="stylesheet">    
+  </head>
+
+  <body style="display:none">
+    <div class="container">
+      <div data-daimio-template="header" id="header">
+        <nav class="navbar navbar-default" role="navigation">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">{$game.name}</a>
+          </div>
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li><a target="_blank" href="/{$game._id}/client">Client</a></li>
+              <li><a target="_blank" href="/{$game._id}/control">Control</a></li>      
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </nav>
+      </div>
+      <div class="page-header">
+        <div class="pull-right">
+          <form id="add-game-form" class="form-inline">
+            <div class="form-group">
+              <input type="text" name="name" value="" id="name" class="form-control" placeholder="Game Name">
+            </div>
+            <input type="submit" name="submit" value="Add" class="btn btn-success">
+          </form>
+        </div>
+        <h1>ScreenPerfect</h1>
+      </div>
+      <ul id="game-list" data-daimio-template="show-all-games" class="media-list">
+        {begin list | each data $games}
+          <li class="media">
+            <a class="pull-left" href="#">
+              <img src="{_value.rooms.#1.urls.control_thumb}" height="100" width="100" class="media-object" >
+            </a>         
+            <div class="media-body">
+              <h4 class="media-heading">{_value.name}</h4>
+              <div class="btn-group">
+                <a href="/{_value._id}/client" class="btn btn-default">Client</a>
+                <a href="/{_value._id}/control" class="btn btn-default">Control</a>
+                <a href="/{_value._id}/admin" class="btn btn-default">Edit</a>
+              </div>
+            </div>
+          </li>
+          <hr>
+        {end list}
+      </ul>
+  
+  <script id="control" type="text/daml" class="spaceseeds">
+    outer
+      
+      $games {}
+      
+      show-all-games
+      
+      @games-data  socket-in  games-data
+      @get-games   socket-out get-games
+      
+      @init from-js
+      @init -> @get-games
+      
+      @set-game-list dom-set-html game-list
+      @games-data -> {__ | >$games} -> show-all-games -> @set-game-list
+      
+      // ADD GAME
+      @save-game     socket-out     save-game
+      @add-game-form dom-on-submit
+      @set-name-val  dom-set-value  name
+      
+      // make sure we have time to save the new game
+      add-game-channel {process sleep for 100 | ""}
+      
+      @add-game-form -> @save-game
+      @add-game-form -> add-game-channel -> @set-name-val
+                        add-game-channel -> @get-games
+  </script>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+  
+    document.addEventListener('DOMContentLoaded', function() {
+
+      D.Etc.socket = io.connect('/')
+
+      var template_els = [].slice.call(document.querySelectorAll('[data-daimio-template]'))
+        , templates    = template_els.reduce(function(acc, template) {
+                           var name = template.attributes.getNamedItem('data-daimio-template').value
+                           acc[name] = template.innerHTML.replace(/ \| &gt;/g, ' | >') // dumb dumb dumb
+                           template.innerHTML = ""
+                           return acc
+                         }, {})
+      
+      document.getElementsByTagName('body')[0].style.display = ''
+      
+      var seedlikes = [].slice.call(
+                        document.getElementsByClassName('spaceseeds')
+                      ).map(function(node) {
+                        return node.text
+                      }).join("\n")
+      
+      var outerseed = D.make_some_space(seedlikes, templates)
+      OuterSpace = new D.Space(outerseed) // published for debug
+      
+      // activate init port
+      D.send_value_to_js_port(outerseed, 'init', 1)
+      
+    })
+  </script>
+
+</body>
+</html>

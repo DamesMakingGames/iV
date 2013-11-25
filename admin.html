@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Screen Perfect Daimio Prototype Admin</title>
+  <script type="text/javascript" src="/daimio_composite.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/public/css/bootstrap.css" rel="stylesheet">
+    <link href="/public/css/styles.css" rel="stylesheet">
+  </head>
+
+<body style="display:none">
+  
+  <div class="container">
+    <div id="header" data-daimio-template="header">
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="navbar-header">
+          <span class="navbar-brand">{$game.name}</span>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a target="_blank" href="/{$game._id}/client" id="client-url">Client</a></li>
+            <li><a target="_blank" href="/{$game._id}/control" id="control-url">Control</a></li>      
+            <li><a target="_blank" class="popup">Both</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Back to game list</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+       
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#tab-rooms" data-toggle="tab">Rooms</a></li>
+          <li class=""><a href="#tab-game" data-toggle="tab">Game</a></li>
+        </ul>
+         <!-- Tab panes -->
+         <div class="tab-content">
+           <div class="tab-pane active" id="tab-rooms">
+        
+             <h2>Rooms</h2>
+        
+             <form id="add-room-form" class="form-vertical">
+               <div class="form-group">
+                 <input type="text" name="name" id="name" class="form-control" placeholder="Room Name">
+               </div>        
+               <input type="submit" name="submit" value="Add Room" class="btn btn-large btn-default">
+             </form>
+        
+             <hr />
+        
+             <div id="room-list" class="row">
+               <script data-daimio-template="show-all-rooms" type="text/daimio">
+               {begin list | merge data $game.rooms}
+                 <div class="col-md-4">              
+                   <a data-value="{_key}" class="thumbnail room-label {_key | is like $selected-room-id | then :selected else ""}">
+                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}"}" class="media-object img-responsive">
+                     <h5>{_name}</h5>
+                   </a>
+                 </div>
+               {end list}
+               </script>
+             </div>
+             
+             
+           </div>
+        
+             <div class="tab-pane" id="tab-game">
+             
+     
+             <h2>Game</h2>
+        
+             <form id="game-data" class="form-horizontal">
+               <script data-daimio-template="game-data" type="text/daimio">
+
+                   <div class="checkbox">
+                     <label>
+                       <input type="checkbox" name="debug" value="1" {$game.debug | then :checked else :foo}="checked"> Show Hotspots in Game
+                     </label>
+                   </div>
+                   <hr>
+                   <div class="form-group">
+                     <label for="name" class="form-label col-md-4">Name</label>
+                     <div class="col-md-8"><input type="text" name="name" class="form-control" value="{$game.name}" /></div>
+                   </div>
+                   <div class="form-group">
+                     <label for="width" class="form-label col-md-4">Width</label>
+                     <div class="col-md-8"><input type="text" name="width" class="form-control" value="{$game.width}" /></div>
+                   </div>
+                   <div class="form-group">
+                     <label for="height" class="form-label col-md-4">Height</label>
+                     <div class="col-md-8">
+                       <input type="text" name="height" class="form-control" value="{$game.height}" />
+                       <hr />
+                       <input type="submit" name="submit" value="Save" class="btn btn-large btn-default">
+                     </div>
+                   </div>
+          
+                   <div class="form-group">
+                     <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
+                     <input type="hidden" name="_id" value="{$game._id}" id="_id">
+                   </div>
+                 </script>
+               </form>
+             </div>        
+           </div>
+         </div>           
+      <div class="col-md-8">
+        <div id="room-div" style="position: relative;">
+          <script data-daimio-template="show-room-div" type="text/daimio">
+
+            <img id="room" src="{__.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}"}" width="{$game.width}" height="{$game.height}">
+            <hr>
+
+            
+            
+            {begin divs | merge data __in.exits}
+              <div id="exit-{_key}" class="hotspot" data-value="{_key}" draggable="true"
+              style="top: {_top | or 0}px; left: {_left | or 0}px; 
+                    height: {_height | or 100}px; width: {_width | or 100}px; 
+                    position: absolute; background-color:#00ea89; opacity: 0.4">
+              <p style="text-info">{$game.rooms.{_room}.name}</p>
+
+              <div class="sizer" data-value="{_key}" draggable="true" style="position: absolute; bottom: 0%; right: 0%; height: 30px; width: 30px; background-color: blue"></div>
+                </div>
+              {end divs}
+            </div>
+            <hr>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+              <li class="{__.urls.control_thumb | then :active}"><a href="#tab-exits" data-toggle="tab">Exits</a></li>
+              <li class="{__.urls.control_thumb | then "" else :active}"><a href="#tab-assets" data-toggle="tab">Assets</a></li>
+            </ul>
+             <!-- Tab panes -->
+             <div class="tab-content">
+               <div class="tab-pane {__.urls.control_thumb | then "" else :active}" id="tab-assets">
+                
+                 <form id="room-form" class="form form-horizontal">
+                   <textarea id="exits" name="exits" width="60" height="3" style="display:none;">{__.exits}</textarea>    
+                   <hr />
+                   <div class="form-group">
+                     <label class="form-label col-md-4" for="control">Room Name</label>                   
+                     <div class="col-md-8">
+                       <input type="text" name="name" value="{__.name}" id="name" class="form-control input-lg" placeholder="Room Name">
+                     </div>
+                   </div>
+                   
+                   <hr />
+                   <h4>Control <small>The interactive screen.</small></h4>
+                   <div class="form-group">
+                     <label class="form-label col-md-4" for="control">Control Video URL</label>
+                     <div class="col-md-8"><input type="text" name="control" value="{__.urls.control}" id="control"  class="form-control"></div>
+                   </div>
+                   <div class="form-group">
+                     <label class="form-label col-md-4" for="control_thumb">Control Thumbnail URL</label>
+                     <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
+                   </div>
+                   <hr>
+                   <h4>Client <small>The projected/secondary screen.</small></h4>
+                   <div class="form-group">
+                     <label class="form-label col-md-4" for="client">Client Video URL</label>
+                     <div class="col-md-8"><input type="text" name="client" value="{__.urls.client}" id="client"  class="form-control"></div>
+                   </div>
+                   <div class="form-group">        
+                     <label class="form-label col-md-4" for="client_thumb">Client Thumbnail URL</label>
+                     <div class="col-md-8">
+                       <input type="text" name="client_thumb" value="{__.urls.client_thumb}" id="client_thumb" class="form-control">
+                       <hr />
+                       <input type="submit" value="Save Changes" class="btn btn-lg btn-success">              
+                     </div>
+                   </div>
+                   <input type="hidden" name="index" value="{$selected-room-id}" id="room_index">
+                 </form>
+                
+                
+               </div>
+               <div class="tab-pane {__.urls.control_thumb | then :active}" id="tab-exits">        
+                 <h3>Exits</h3>
+                 <div class="row">      
+                   <div class="col-md-6">
+                     <h4>Current Exits</h4>
+                     <ul class="list-group">
+                       {begin exists | each data {__in.exits | list from-json}}
+                         <li class="exit-listing list-group-item" data-value="{_key}">
+                           <img src="{$game.rooms.{_value.room}.urls.control_thumb}" width="40" height="40">
+                           {$game.rooms.{_value.room}.name}
+                           <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
+                         </li>
+                       {end exists}
+                     </ul>
+                   </div>
+                   <div class="col-md-6">
+                     <form id="add-exit-form" class="form form-vertical">
+                       <h4>Add an Exit To:</h4>
+                       <div class="form-group">
+                         <select name="exit-id" id="add-an-exit" class="form-control">
+                           {begin rooms | each data $game.rooms}
+                             <option value="{_key}">{_value.name}</option>
+                           {end rooms}
+                         </select>
+                       </div>
+                       <input type="submit" value="Add Exit" class="btn btn-large btn-default">
+                     </form>
+                   </div>
+                 </div>
+               </div>
+             </div>
+          </script>  <!-- end show-room-div template -->      
+        </div>
+    </div>
+  </div>
+  
+  
+  <script id="control" type="text/daml" class="spaceseeds">
+    outer
+      
+      $game {}
+      $selected-room-id -1
+      
+      // NETWORK
+      @game-data    socket-in  game-data
+      @request-data socket-out request-data
+      
+      @init from-js
+      @init -> @request-data
+      
+      changed   {__}
+      @game-data -> {__ | >$game | 0} -> changed
+      
+      // DISPLAY
+      show-all-rooms
+      header
+      
+      @set-room-list dom-set-html room-list
+      @set-header    dom-set-html header
+      
+      changed -> show-all-rooms -> @set-room-list
+      changed -> header         -> @set-header
+      
+      // SAVE A ROOM
+      @save-game socket-out save-game
+      @room-form dom-on-submit
+      
+      save-game {__}
+      save-game -> changed
+      save-game -> @save-game
+
+      eat-room-form
+        { __ | >raw-info
+        | * (:name  _raw-info.name 
+             :exits {_raw-info.exits | list from-json} 
+             :urls  {_raw-info | list remove by_key (:name :exits)} )
+        | list poke data $game path (:rooms {_raw-info.index | else {$game.rooms | count}}) | >$game}
+        
+      @room-form -> eat-room-form -> save-game
+      
+      // SELECT A ROOM
+      show-room-div
+      room-changer
+        { __ | >$selected-room-id}
+      selected-room-only
+        {$selected-room-id | eq -1 | else "{1 | >@good}" | run}
+      
+      @change-room   dom-on-click .room-label
+      @set-room-div  dom-set-html  room-div
+
+      @init -> {"<div class='alert alert-info'>Select a room from the list.</div>"} -> @set-room-div
+      @change-room -> room-changer -> changed
+      changed -> selected-room-only
+      selected-room-only.good -> {$game.rooms.{$selected-room-id}} -> show-room-div  -> @set-room-div
+      
+      // ADD A ROOM
+      @add-room-form    dom-on-submit
+      @add-room-form -> eat-room-form
+      // @add-room-form -> {$game.rooms | count} -> room-changer
+
+      // LIST EXISTS
+      highlight-exit {__}
+      
+      @tweak-style
+      @over-exit dom-on-mouseover .exit-listing
+      @out-exit  dom-on-mouseout  .exit-listing
+
+      @over-exit -> {* (:id {("exit-" __in) | join} :attr "background-color" :value :yellow)} -> @tweak-style
+      @out-exit  -> {* (:id {("exit-" __in) | join} :attr "background-color" :value "#00ea89")}  -> @tweak-style
+    
+      // ADD AN EXIT
+      add-an-exit
+        { $game.rooms.{$selected-room-id}.exits 
+        | poke {* (:room __in.exit-id 
+                   :width 100 :height 100
+                   :top 0 :left 0)}
+        | >$game.rooms.{$selected-room-id}.exits}
+
+      @add-exit-form dom-on-submit
+      @add-exit-form -> add-an-exit -> save-game
+      
+      // REMOVE AN EXIT      
+      remove-an-exit
+        { $game.rooms.{$selected-room-id}.exits 
+        | list remove by_key __in
+        | >$game.rooms.{$selected-room-id}.exits}
+      
+      @remove-exit dom-on-click .remove-exit
+      @remove-exit -> remove-an-exit -> save-game
+      
+      // MOVE AN EXIT
+      move-hot-spot
+        { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
+        | * (:room _exit.room :width _exit.width :height _exit.height
+             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0} 
+             :left {_exit.left | add _e.offsetX | max 0})
+        | >$game.rooms.{$selected-room-id}.exits.{_e.value}}
+      
+      @hotspot dom-on-dragend .hotspot
+      @hotspot -> move-hot-spot -> save-game
+      
+      // SIZE AN EXIT
+      size-hot-spot
+        { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
+        | * (:room _exit.room :top _exit.top :left _exit.left
+             :width  {_exit.width  | add _e.offsetX | max 30}
+             :height {_exit.height | add _e.offsetY | minus 30 | max 30})
+        | >$game.rooms.{$selected-room-id}.exits.{_e.value}}
+      
+      @sizer dom-on-dragend .sizer
+      @sizer -> size-hot-spot -> save-game
+      
+      // EDIT GAME DATA
+      game-data
+      @set-game-data-form     dom-set-html   game-data
+      @submit-game-data-form  dom-on-submit  game-data
+      
+      changed -> game-data -> @set-game-data-form
+      
+      @submit-game-data-form -> {__ | tap | >$game | __.rooms | list from-json | >$game.rooms} -> save-game
+      
+      // TODO: exits GUI
+      // TODO: add 'parent' to history
+      // TODO: munge html and daimio code in html templates separately (like {3 | >$x} -> {3 | &gt;x})
+      // TODO: make run default to all local named scoped params (ORLY?) [could work for injected but not pipeline]
+      // TODO: only run with not if with but maybe merge with stupid state stupid alias stupid pipes
+      // TODO: shift to show greens in control
+      // YAGNI: local machine refs
+      // YAGNI: whitespace chomping
+      
+  </script>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/public/js/bootstrap.min.js"></script>
+  
+  
+  <script type="text/javascript">
+
+    D.import_port_flavour('dom-on-dragend', {
+      dir: 'in',
+      outside_add: function() {
+        var self = this
+        var fun = function(value, event) {
+          event.dataTransfer.effectAllowed = "move"
+          event.dataTransfer.dropEffect = 'move'
+          event.value = value
+          self.enter(D.scrub_var(event))
+        }
+        
+        D.track_event('dragend', this.settings.thing, fun)
+      }
+    })
+  
+    D.import_port_flavour('tweak-style', {
+      dir: 'out',
+      outside_exit: function(ship) {
+        try {
+          var el = document.getElementById(ship.id)
+          if(!el) return false
+
+          el.style[ship.attr] = ship.value        
+        } catch(e) {}
+      }
+    })
+  
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      D.Etc.socket = io.connect('/')
+    
+      var template_els = [].slice.call(document.querySelectorAll('[data-daimio-template]'))
+        , templates    = template_els.reduce(function(acc, template) {
+                           var name = template.attributes.getNamedItem('data-daimio-template').value
+                           acc[name] = template.innerHTML
+                           template.innerHTML = ""
+                           return acc
+                         }, {})
+
+      document.getElementsByTagName('body')[0].style.display = ''
+                     
+      var seedlikes = Array.prototype.slice.call(
+                        document.getElementsByClassName('spaceseeds')
+                      ).map(function(node) {
+                        return node.text
+                      }).join("\n")
+    
+      var outerseed = D.make_some_space(seedlikes, templates)
+      OuterSpace = new D.Space(outerseed) // published for debug
+    
+      // activate init port
+      var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
+      var data = {game: game_id} // {game: '5275ec64388d57ccb2f87d0e'}
+      D.send_value_to_js_port(outerseed, 'init', data)
+      
+
+        $('body').on("click",".popup",function (event) {
+          event.preventDefault();    
+          var client = $('#client-url').attr('href');
+          var control = $('#control-url').attr('href');
+          
+          window.open(client,"","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=" + OuterSpace.state.game.width + ",height=" + OuterSpace.state.game.height);
+          window.open(control,"","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=" + OuterSpace.state.game.width + ",height=" + OuterSpace.state.game.height);
+        })
+    })
+    
+    // touchy feely stuff. http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
+    function touchHandler(event) {
+      var touches = event.changedTouches,
+      first = touches[0],
+      type = "";
+
+      switch(event.type) {
+        case "touchstart": type="mousedown"; break;
+        case "touchmove":  type="mousemove"; break;        
+        case "touchend":   type="mouseup"; break;
+        default: return;
+      }
+      var simulatedEvent = document.createEvent("MouseEvent");
+      simulatedEvent.initMouseEvent(type, true, true, window, 1,
+        first.screenX, first.screenY,
+        first.clientX, first.clientY, false,
+        false, false, false, 0/*left*/, null
+      );
+      
+      first.target.dispatchEvent(simulatedEvent);
+      // if(dragging) event.preventDefault();
+    }
+
+    ~function init() {
+      document.addEventListener("touchstart", touchHandler, true);
+      document.addEventListener("touchmove", touchHandler, true);
+      document.addEventListener("touchend", touchHandler, true);
+      document.addEventListener("touchcancel", touchHandler, true);    
+    }()
+
+  </script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/public/js/bootstrap.min.js"></script>
+  
+</div>
+</body>
+</html>

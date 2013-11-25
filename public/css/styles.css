@@ -1,0 +1,14 @@
+body {
+  margin-bottom: 30px;
+}
+.thumbnail.room-label {
+  cursor: pointer;
+}
+.hotspot p {
+  color: #000;
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 12px;
+  padding: 6px;
+  text-transform: uppercase;
+}
