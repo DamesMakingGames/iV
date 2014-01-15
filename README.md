@@ -4,6 +4,7 @@ A system for making games.
 
 ## Installation
 
+0. Install [Node.js](http://nodejs.org)
 1. clone the repo
 2. npm install mongodb
 3. node daimio_sp_app.js
