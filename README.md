@@ -1,6 +1,6 @@
 # iV
 
-A system for making games.
+A system for making synchronous, hackable, interactive narrative games. Currently in development by @jennie, @cecilycarver and @dann for Dames Making Games.
 
 ## Installation
 
@@ -9,6 +9,8 @@ A system for making games.
 2. npm install mongodb
 3. node daimio_sp_app.js
 4. go to server.foo:8888
+
+Need help? Tweet at [@jennie](http://twitter.com/jennie)
 
 ## History
 
