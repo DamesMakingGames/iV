@@ -15,13 +15,13 @@
           <div class="navbar-header">
             <a class="navbar-brand" href="#">{$game.name}</a>
           </div>
-          <!-- Collect the nav links, forms, and other content for toggling -->
+          <!-- Collect the nav links, forms, and other content for toggling 
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
               <li><a target="_blank" href="/{$game._id}/client">Client</a></li>
               <li><a target="_blank" href="/{$game._id}/control">Control</a></li>      
             </ul>
-          </div><!-- /.navbar-collapse -->
+          </div> /.navbar-collapse -->
         </nav>
       </div>
       <div class="page-header">
@@ -33,7 +33,7 @@
             <input type="submit" name="submit" value="Add" class="btn btn-success">
           </form>
         </div>
-        <h1>ScreenPerfect</h1>
+        <h1>Welcome to iV</h1>
       </div>
       <ul id="game-list" data-daimio-template="show-all-games" class="media-list">
         {begin list | each data $games}
@@ -44,8 +44,8 @@
             <div class="media-body">
               <h4 class="media-heading">{_value.name}</h4>
               <div class="btn-group">
-                <a href="/{_value._id}/client" class="btn btn-default">Client</a>
-                <a href="/{_value._id}/control" class="btn btn-default">Control</a>
+                <!-- <a href="/{_value._id}/client" class="btn btn-default">Client</a> -->
+                <a href="/{_value._id}/control" class="btn btn-default">Launch</a>
                 <a href="/{_value._id}/admin" class="btn btn-default">Edit</a>
               </div>
             </div>

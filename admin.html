@@ -18,12 +18,13 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav">
+          <!-- <ul class="nav navbar-nav">
             <li><a target="_blank" href="/{$game._id}/client" id="client-url">Client</a></li>
             <li><a target="_blank" href="/{$game._id}/control" id="control-url">Control</a></li>      
             <li><a target="_blank" class="popup">Both</a></li>
-          </ul>
+          </ul> -->
           <ul class="nav navbar-nav navbar-right">
+            <li><a target="_blank" href="/{$game._id}/control" id="control-url">Launch game</a></li>
             <li><a href="/">Back to game list</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -159,18 +160,20 @@
                      <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
                    </div>
                    <hr>
-                   <h4>Client <small>The projected/secondary screen.</small></h4>
+                   <!--<h4>Client <small>The projected/secondary screen.</small></h4>
                    <div class="form-group">
                      <label class="form-label col-md-4" for="client">Client Video URL</label>
                      <div class="col-md-8"><input type="text" name="client" value="{__.urls.client}" id="client"  class="form-control"></div>
                    </div>
-                   <div class="form-group">        
+                   <!-- <div class="form-group">        
                      <label class="form-label col-md-4" for="client_thumb">Client Thumbnail URL</label>
                      <div class="col-md-8">
-                       <input type="text" name="client_thumb" value="{__.urls.client_thumb}" id="client_thumb" class="form-control">
-                       <hr />
-                       <input type="submit" value="Save Changes" class="btn btn-lg btn-success">              
+                       <input type="text" name="client_thumb" value="{__.urls.client_thumb}" id="client_thumb" class="form-control">           
                      </div>
+                   </div> -->
+                   <div class="form-group">
+                     <hr />
+                     <input type="submit" value="Save Changes" class="btn btn-lg btn-success">
                    </div>
                    <input type="hidden" name="index" value="{$selected-room-id}" id="room_index">
                  </form>
