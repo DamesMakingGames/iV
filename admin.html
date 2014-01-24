@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>Screen Perfect Daimio Prototype Admin</title>
+  <title>iV Daimio Prototype Admin</title>
   <script type="text/javascript" src="/daimio_composite.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/public/css/bootstrap.css" rel="stylesheet">
@@ -354,10 +354,6 @@
 
 
   <script src="/socket.io/socket.io.js"></script>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://code.jquery.com/jquery.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="/public/js/bootstrap.min.js"></script>
   
   
   <script type="text/javascript">
@@ -390,47 +386,13 @@
     })
   
     document.addEventListener('DOMContentLoaded', function() {
-      
       D.Etc.socket = io.connect('/')
     
-      var template_els = [].slice.call(document.querySelectorAll('[data-daimio-template]'))
-        , templates    = template_els.reduce(function(acc, template) {
-                           var name = template.attributes.getNamedItem('data-daimio-template').value
-                           acc[name] = template.innerHTML
-                           template.innerHTML = ""
-                           return acc
-                         }, {})
-
-      document.getElementsByTagName('body')[0].style.display = ''
-                     
-      var seedlikes = Array.prototype.slice.call(
-                        document.getElementsByClassName('spaceseeds')
-                      ).map(function(node) {
-                        return node.text
-                      }).join("\n")
-    
-      var outerseed = D.make_some_space(seedlikes, templates)
-      OuterSpace = new D.Space(outerseed) // published for debug
+      OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
     
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
-      var data = {game: game_id} // {game: '5275ec64388d57ccb2f87d0e'}
-      D.send_value_to_js_port(OuterSpace, 'init', data)
-      
-      $('body').on("click",".popup",function (event) {
-        event.preventDefault();    
-        var client = $('#client-url').attr('href');
-        var control = $('#control-url').attr('href');
-
-        window.open(client,  "", "directories=0,titlebar=0,toolbar=0,location=0,status=0," 
-                               + "menubar=0,scrollbars=no,resizable=no,width=" 
-                               + OuterSpace.state.game.width + ",height=" 
-                               + OuterSpace.state.game.height);
-        window.open(control, "", "directories=0,titlebar=0,toolbar=0,location=0,status=0," 
-                               + "menubar=0,scrollbars=no,resizable=no,width=" 
-                               + OuterSpace.state.game.width + ",height=" 
-                               + OuterSpace.state.game.height);
-      })
+      D.send_value_to_js_port(OuterSpace, 'init', {game: game_id})
     })
     
     // touchy feely stuff. http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
@@ -464,11 +426,7 @@
     }()
 
   </script>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://code.jquery.com/jquery.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="/public/js/bootstrap.min.js"></script>
-  
+    
 </div>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html> 
 <head> 
   <meta charset="utf-8">
-  <title>Screen Perfect Loves You</title>
+  <title>iV is your friend</title>
   <script type="text/javascript" src="/daimio_composite.js"></script>
   <style>
     body { padding: 0; margin: 0;}
@@ -30,18 +30,15 @@
     
       {begin selection | each data $game.rooms}
         { $control-mode 
-        | then $game.rooms.{_key}.urls.control 
-          else $game.rooms.{_key}.urls.client
-          with $false
+        | then _value.urls.control 
+          else _value.urls.client
         | string slice start -3 
         | is in (:ebm :m4v :mp4 :mov) 
-        | if __
-          then $video-template 
+        | then $video-template 
           else $image-template
-          with $false
         | run with {* (:key _key :value _value)} }
       {end selection}
-  </div> <!-- TODO: examine this totally freaky webkit whitespace issue -->
+    </div> <!-- TODO: examine this totally freaky webkit whitespace issue -->
   
     <div id="divs" data-daimio-template="show-divs">
       {begin divs | merge data $game.rooms.{$room-id}.exits | if $control-mode then __ else ""}
@@ -135,24 +132,7 @@
 
       D.Etc.socket = io.connect('/')
 
-      var template_els = [].slice.call(document.querySelectorAll('[data-daimio-template]'))
-        , templates    = template_els.reduce(function(acc, template) {
-                           var name  = template.attributes.getNamedItem('data-daimio-template').value
-                           acc[name] = template.innerHTML .replace(/ \| &gt;/g, ' | >') // dumb dumb dumb
-                           template.innerHTML = ""
-                           return acc
-                         }, {})
-
-      document.getElementsByTagName('body')[0].style.display = ''
-
-      var seedlikes = Array.prototype.slice.call(
-                        document.getElementsByClassName('spaceseeds')
-                      ).map(function(node) {
-                        return node.text
-                      }).join("\n")
-
-      var outerseed = D.make_some_space(seedlikes, templates)
-      OuterSpace = new D.Space(outerseed) // published for debug
+      OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
 
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]

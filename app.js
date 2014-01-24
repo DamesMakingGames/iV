@@ -101,7 +101,6 @@ io.on('connection', function (socket) {
   // YAGNI: multiple sessions
 
   socket.on('save-game', function (game) {
-
     try {
       db.collection('games', function(err, c) {
         if(game._id)
@@ -118,9 +117,8 @@ io.on('connection', function (socket) {
         io.sockets.in(game._id).emit('game-data', game)
       })
     } catch (e) {return false}
-
   })
-
+  
   socket.on('bounce', function (data) {
     io.sockets.in(data.game).emit('bounced', data.room)
   })
