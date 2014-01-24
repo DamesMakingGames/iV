@@ -243,7 +243,7 @@ reduce(function(acc, item) {
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       var data = {game: game_id} // {game: '5275ec64388d57ccb2f87d0e'}
-      D.send_value_to_js_port(outerseed, 'init', data)
+      D.send_value_to_js_port(OuterSpace, 'init', data)
       
     })
   </script>

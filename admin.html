@@ -415,17 +415,22 @@
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       var data = {game: game_id} // {game: '5275ec64388d57ccb2f87d0e'}
-      D.send_value_to_js_port(outerseed, 'init', data)
+      D.send_value_to_js_port(OuterSpace, 'init', data)
       
+      $('body').on("click",".popup",function (event) {
+        event.preventDefault();    
+        var client = $('#client-url').attr('href');
+        var control = $('#control-url').attr('href');
 
-        $('body').on("click",".popup",function (event) {
-          event.preventDefault();    
-          var client = $('#client-url').attr('href');
-          var control = $('#control-url').attr('href');
-          
-          window.open(client,"","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=" + OuterSpace.state.game.width + ",height=" + OuterSpace.state.game.height);
-          window.open(control,"","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=" + OuterSpace.state.game.width + ",height=" + OuterSpace.state.game.height);
-        })
+        window.open(client,  "", "directories=0,titlebar=0,toolbar=0,location=0,status=0," 
+                               + "menubar=0,scrollbars=no,resizable=no,width=" 
+                               + OuterSpace.state.game.width + ",height=" 
+                               + OuterSpace.state.game.height);
+        window.open(control, "", "directories=0,titlebar=0,toolbar=0,location=0,status=0," 
+                               + "menubar=0,scrollbars=no,resizable=no,width=" 
+                               + OuterSpace.state.game.width + ",height=" 
+                               + OuterSpace.state.game.height);
+      })
     })
     
     // touchy feely stuff. http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
