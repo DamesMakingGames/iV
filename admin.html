@@ -47,7 +47,14 @@
              <form id="add-room-form" class="form-vertical">
                <div class="form-group">
                  <input type="text" name="name" id="name" class="form-control" placeholder="Room Name">
-               </div>        
+               </div> 
+               <div class="form-group"> 
+               <select name="roomtype">
+                 <option value="text">Text</option>
+                 <option value="image">Picture</option>
+                 <option value="video">Video</option>
+               </select>
+               </div>    
                <input type="submit" name="submit" value="Add Room" class="btn btn-large btn-default">
              </form>
         
@@ -58,7 +65,7 @@
                {begin list | merge data $game.rooms}
                  <div class="col-md-4">              
                    <a data-value="{_key}" class="thumbnail room-label {_key | is like $selected-room-id | then :selected else ""}">
-                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}"}" class="media-object img-responsive">
+                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" class="media-object img-responsive">
                      <h5>{_name}</h5>
                    </a>
                  </div>
@@ -112,10 +119,23 @@
       <div class="col-md-8">
         <div id="room-div" style="position: relative;">
           <script data-daimio-template="show-room-div" type="text/daimio">
+            {__ | >room ||}
 
-            <img id="room" src="{__.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}"}" width="{$game.width}" height="{$game.height}">
+            {begin image | >image-template ||}
+              <img id="room" src="{__in.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}"}" width="{$game.width}" height="{$game.height}">
+            {end image}
+
+            {begin text | >text-template ||}
+              {__in.text}
+            {end text}
+            
+            
+            { _room.type | eq :text | not
+            | then _image-template else _text-template 
+            | run}
+            
+            
             <hr>
-
             
             
             {begin divs | merge data __in.exits}
@@ -150,16 +170,29 @@
                    </div>
                    
                    <hr />
-                   <h4>Control <small>The interactive screen.</small></h4>
-                   <div class="form-group">
-                     <label class="form-label col-md-4" for="control">Control Video URL</label>
-                     <div class="col-md-8"><input type="text" name="control" value="{__.urls.control}" id="control"  class="form-control"></div>
-                   </div>
-                   <div class="form-group">
-                     <label class="form-label col-md-4" for="control_thumb">Control Thumbnail URL</label>
-                     <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
-                   </div>
-                   <hr>
+                   
+                   {begin image-admin | >image-admin-template ||}
+                     <h4>Control <small>The interactive screen.</small></h4>
+                     <div class="form-group">
+                       <label class="form-label col-md-4" for="control">Control Video URL</label>
+                       <div class="col-md-8"><input type="text" name="control" value="{__.urls.control}" id="control"  class="form-control"></div>
+                     </div>
+                     <div class="form-group">
+                       <label class="form-label col-md-4" for="control_thumb">Control Thumbnail URL</label>
+                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
+                     </div>
+                     <hr>
+                   {end image}
+
+                   {begin text-admin | >text-admin-template ||}
+                     <textarea lines="10" cols="30" name="roomtext">{__.text}</textarea>
+                   {end text}
+
+
+                   { _room.type | eq :text | not
+                   | then _image-admin-template else _text-admin-template 
+                   | run}
+                   
                    <!--<h4>Client <small>The projected/secondary screen.</small></h4>
                    <div class="form-group">
                      <label class="form-label col-md-4" for="client">Client Video URL</label>
@@ -171,11 +204,15 @@
                        <input type="text" name="client_thumb" value="{__.urls.client_thumb}" id="client_thumb" class="form-control">           
                      </div>
                    </div> -->
+                   
+                   
+                   
                    <div class="form-group">
                      <hr />
                      <input type="submit" value="Save Changes" class="btn btn-lg btn-success">
                    </div>
                    <input type="hidden" name="index" value="{$selected-room-id}" id="room_index">
+                   <input type="hidden" name="roomtype" value="{__.type}" id="room_type">
                  </form>
                 
                 
@@ -254,6 +291,8 @@
       eat-room-form
         { __ | >raw-info
         | * (:name  _raw-info.name 
+             :type  _raw-info.roomtype
+             :text  _raw-info.roomtext
              :exits {_raw-info.exits | list from-json} 
              :urls  {_raw-info | list remove by_key (:name :exits)} )
         | list poke data $game path (:rooms {_raw-info.index | else {$game.rooms | count}}) | >$game}
@@ -354,7 +393,10 @@
 
 
   <script src="/socket.io/socket.io.js"></script>
-  
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/public/js/bootstrap.min.js"></script>
   
   <script type="text/javascript">
 
