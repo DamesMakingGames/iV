@@ -18,24 +18,30 @@
     <div id="rooms" data-daimio-template="build-room-display">
       {begin video_template | >$video-template | ""}
         <video id="{_key}" class="fullscreen hidden" style="" loop="true" width="{$game.width}" height="{$game.height}">
-          <source src="{$control-mode | then $game.rooms.{_key}.urls.control else $game.rooms.{_key}.urls.client}" type="video/webm">
+          <source src="{$control-mode | then _value.urls.control else _value.urls.client}" type="video/webm">
           Your browser does not support the video tag.
         </video>
       {end video_template}
     
       {begin image_template | >$image-template | ""}
-        <img src="{$control-mode | then $game.rooms.{_key}.urls.control else $game.rooms.{_key}.urls.client}"
+        <img src="{$control-mode | then _value.urls.control else _value.urls.client}"
               id="{_key}" class="fullscreen hidden" width="{$game.width}" height="{$game.height}">
       {end image_template}
     
+      {begin text_template | >$text-template | ""}
+        {_value.text}
+      {end text_template}
+      
       {begin selection | each data $game.rooms}
         { $control-mode 
         | then _value.urls.control 
           else _value.urls.client
-        | string slice start -3 
-        | is in (:ebm :m4v :mp4 :mov) 
-        | then $video-template 
-          else $image-template
+        | string slice start -3 | >extension
+        | cond (
+           {_value.text}                                $text-template
+           {_extension | is in (:ebm :m4v :mp4 :mov)}   $video-template
+           {:otherwise }                                $image-template
+          )
         | run with {* (:key _key :value _value)} }
       {end selection}
     </div> <!-- TODO: examine this totally freaky webkit whitespace issue -->
