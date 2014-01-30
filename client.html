@@ -30,7 +30,7 @@
       {end image_template}
     
       {begin text_template | >$text-template | ""}
-        <div  id="{_key}" class="fullscreen hidden">{_value.text | string markdown}</div>
+        <div  id="{_key}" class="fullscreen hidden">{_value.text | string markdown | string iv_parser rooms $game.rooms}</div>
       {end text_template}
       
       {begin selection | each data $game.rooms}
@@ -193,6 +193,30 @@
             ],
             fun: function(value) {
               return markdown.toHTML(value)
+            }
+          },
+          iv_parser: {
+            desc: 'Look for special iV flags',
+            params: [
+              {
+                key: 'value',
+                desc: 'A string',
+                type: 'string',
+                required: true
+              },
+              {
+                key: 'rooms',
+                desc: 'List of rooms in game',
+                type: 'list',
+                required: true
+              }
+            ],
+            fun: function(value, rooms) {
+              var roomnames = {};
+              for (var key in rooms) {
+                roomnames[rooms[key].name] = key;
+              };
+              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) { return '<a href="" data-value="' + roomnames[p1] + '" class="link">' + p2 + '</a>'; });
             }
           }
         }

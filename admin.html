@@ -129,7 +129,7 @@
             {end image}
 
             {begin text | >text-template ||}
-              {__in.text}
+              {__in.text | string markdown | string iv_parser rooms $game.rooms}
             {end text}
             
             
@@ -325,11 +325,13 @@
       selected-room-only
         {$selected-room-id | eq -1 | else "{1 | >@good}" | run}
       
+      @change-room-text dom-on-click .link
       @change-room   dom-on-click .room-label
       @set-room-div  dom-set-html  room-div
 
       @init -> {"<div class='alert alert-info'>Select a room from the list.</div>"} -> @set-room-div
       @change-room -> room-changer -> changed
+      @change-room-text -> room-changer
       changed -> selected-room-only
       selected-room-only.good -> {$game.rooms.{$selected-room-id}} -> show-room-div  -> @set-room-div
       
@@ -501,6 +503,30 @@
             ],
             fun: function(value) {
               return markdown.toHTML(value)
+            }
+          },
+          iv_parser: {
+            desc: 'Look for special iV flags',
+            params: [
+              {
+                key: 'value',
+                desc: 'A string',
+                type: 'string',
+                required: true
+              },
+              {
+                key: 'rooms',
+                desc: 'List of rooms in game',
+                type: 'list',
+                required: true
+              }
+            ],
+            fun: function(value, rooms) {
+              var roomnames = {};
+              for (var key in rooms) {
+                roomnames[rooms[key].name] = key;
+              };
+              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) { return '<a href="" data-value="' + roomnames[p1] + '" class="link">' + p2 + '</a>'; });
             }
           }
         }
