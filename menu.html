@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>iV Daimio Prototype Admin</title>
+  <title>iV Menu</title>
   <script type="text/javascript" src="/daimio_composite.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/public/css/bootstrap.css" rel="stylesheet">
@@ -39,7 +39,7 @@
         {begin list | each data $games}
           <li class="media">
             <a class="pull-left" href="#">
-              <img src="{_value.rooms.#1.urls.control_thumb}" height="100" width="100" class="media-object" >
+              <img src="{_value.thumb}" height="100" width="100" class="media-object" >
             </a>         
             <div class="media-body">
               <h4 class="media-heading">{_value.name}</h4>
