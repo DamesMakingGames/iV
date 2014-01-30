@@ -38,84 +38,86 @@
           <li class="active"><a href="#tab-rooms" data-toggle="tab">Rooms</a></li>
           <li class=""><a href="#tab-game" data-toggle="tab">Game</a></li>
         </ul>
-         <!-- Tab panes -->
-         <div class="tab-content">
-           <div class="tab-pane active" id="tab-rooms">
-        
-             <h2>Rooms</h2>
-        
-             <form id="add-room-form" class="form-vertical">
-               <div class="form-group">
-                 <input type="text" name="name" id="name" class="form-control" placeholder="Room Name">
-               </div> 
-               <div class="form-group"> 
-               <select name="roomtype">
-                 <option value="text">Text</option>
-                 <option value="image">Picture</option>
-                 <option value="video">Video</option>
-               </select>
-               </div>    
-               <input type="submit" name="submit" value="Add Room" class="btn btn-large btn-default">
-             </form>
-        
-             <hr />
-        
-             <div id="room-list" class="row">
-               <script data-daimio-template="show-all-rooms" type="text/daimio">
-               {begin list | merge data $game.rooms}
-                 <div class="col-md-4">              
-                   <a data-value="{_key}" class="thumbnail room-label {_key | is like $selected-room-id | then :selected else ""}">
-                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" class="media-object img-responsive">
-                     <h5>{_name}</h5>
-                   </a>
-                 </div>
-               {end list}
-               </script>
-             </div>
-             
-             
-           </div>
-        
-             <div class="tab-pane" id="tab-game">
-             
-     
-             <h2>Game</h2>
-        
-             <form id="game-data" class="form-horizontal">
-               <script data-daimio-template="game-data" type="text/daimio">
-
-                   <div class="checkbox">
-                     <label>
-                       <input type="checkbox" name="debug" value="1" {$game.debug | then :checked else :foo}="checked"> Show Hotspots in Game
-                     </label>
-                   </div>
-                   <hr>
-                   <div class="form-group">
-                     <label for="name" class="form-label col-md-4">Name</label>
-                     <div class="col-md-8"><input type="text" name="name" class="form-control" value="{$game.name}" /></div>
-                   </div>
-                   <div class="form-group">
-                     <label for="width" class="form-label col-md-4">Width</label>
-                     <div class="col-md-8"><input type="text" name="width" class="form-control" value="{$game.width}" /></div>
-                   </div>
-                   <div class="form-group">
-                     <label for="height" class="form-label col-md-4">Height</label>
-                     <div class="col-md-8">
-                       <input type="text" name="height" class="form-control" value="{$game.height}" />
-                       <hr />
-                       <input type="submit" name="submit" value="Save" class="btn btn-large btn-default">
-                     </div>
-                   </div>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab-rooms">
+       
+            <h2>Rooms</h2>
+       
+            <form id="add-room-form" class="form-vertical">
+              <div class="form-group">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Room Name">
+              </div> 
+              <div class="form-group"> 
+              <select name="roomtype">
+                <option value="text">Text</option>
+                <option value="image">Picture</option>
+                <option value="video">Video</option>
+              </select>
+              </div>    
+              <input type="submit" name="submit" value="Add Room" class="btn btn-large btn-default">
+            </form>
+       
+            <hr />
+       
+            <div id="room-list" class="row">
+              <script data-daimio-template="show-all-rooms" type="text/daimio">
+              {begin list | merge data $game.rooms}
+                <div class="col-md-4">              
+                  <a data-value="{_key}" class="thumbnail room-label {_key | is like $selected-room-id | then :selected else ""}">
+                    <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" class="media-object img-responsive">
+                    <h5>{_name}</h5>
+                  </a>
+                </div>
+              {end list}
+              </script>
+            </div>
+          </div>
           
-                   <div class="form-group">
-                     <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
-                     <input type="hidden" name="_id" value="{$game._id}" id="_id">
-                   </div>
-                 </script>
-               </form>
-             </div>        
-           </div>
-         </div>           
+          <div class="tab-pane" id="tab-game">
+
+            <h2>Game</h2>
+       
+            <form id="game-data" class="form-horizontal">
+              <script data-daimio-template="game-data" type="text/daimio">
+       
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" name="debug" value="1" {$game.debug | then :checked else :foo}="checked"> Debug mode (Show Hotspots in Game)
+                    </label>
+                  </div>
+                  <hr>
+                  <div class="form-group">
+                    <label for="name" class="form-label col-md-4">Name</label>
+                    <div class="col-md-8"><input type="text" name="name" class="form-control" value="{$game.name}" /></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="name" class="form-label col-md-4">Game Thumbnail</label>
+                    <div class="col-md-8"><input type="text" name="thumb" class="form-control" value="{$game.thumb}" /></div>
+                  </div>
+                  <p><small>Width and height lock image and video rooms to a particular resolution. Leave blank for adaptable content.</small></p>
+                  <div class="form-group">
+                    <label for="width" class="form-label col-md-4">Width</label>
+                    <div class="col-md-8"><input type="text" name="width" class="form-control" value="{$game.width}" /></div>
+                  </div>
+                  <div class="form-group">
+                    <label for="height" class="form-label col-md-4">Height</label>
+                    <div class="col-md-8">
+                      <input type="text" name="height" class="form-control" value="{$game.height}" />
+                      <hr />
+                      <input type="submit" name="submit" value="Save" class="btn btn-large btn-default">
+                    </div>
+                  </div>
+         
+                  <div class="form-group">
+                    <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
+                    <input type="hidden" name="_id" value="{$game._id}" id="_id">
+                  </div>
+                </script>
+              </form>
+            </div>        
+          </div>
+        </div>           
       <div class="col-md-8">
         <div id="room-div" style="position: relative;">
           <script data-daimio-template="show-room-div" type="text/daimio">
@@ -155,99 +157,115 @@
               <li class="{__.urls.control_thumb | then :active}"><a href="#tab-exits" data-toggle="tab">Exits</a></li>
               <li class="{__.urls.control_thumb | then "" else :active}"><a href="#tab-assets" data-toggle="tab">Assets</a></li>
             </ul>
-             <!-- Tab panes -->
-             <div class="tab-content">
-               <div class="tab-pane {__.urls.control_thumb | then "" else :active}" id="tab-assets">
-                
-                 <form id="room-form" class="form form-horizontal">
-                   <textarea id="exits" name="exits" width="60" height="3" style="display:none;">{__.exits}</textarea>    
-                   <hr />
-                   <div class="form-group">
-                     <label class="form-label col-md-4" for="control">Room Name</label>                   
-                     <div class="col-md-8">
-                       <input type="text" name="name" value="{__.name}" id="name" class="form-control input-lg" placeholder="Room Name">
-                     </div>
-                   </div>
-                   
-                   <hr />
-                   
-                   {begin image-admin | >image-admin-template ||}
-                     <h4>Control <small>The interactive screen.</small></h4>
-                     <div class="form-group">
-                       <label class="form-label col-md-4" for="control">Control Video URL</label>
-                       <div class="col-md-8"><input type="text" name="control" value="{__.urls.control}" id="control"  class="form-control"></div>
-                     </div>
-                     <div class="form-group">
-                       <label class="form-label col-md-4" for="control_thumb">Control Thumbnail URL</label>
-                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
-                     </div>
-                     <hr>
-                   {end image}
-
-                   {begin text-admin | >text-admin-template ||}
-                     <textarea lines="10" cols="30" name="roomtext">{__.text}</textarea>
-                   {end text}
-
-
-                   { _room.type | eq :text | not
-                   | then _image-admin-template else _text-admin-template 
-                   | run}
-                   
-                   <!--<h4>Client <small>The projected/secondary screen.</small></h4>
-                   <div class="form-group">
-                     <label class="form-label col-md-4" for="client">Client Video URL</label>
-                     <div class="col-md-8"><input type="text" name="client" value="{__.urls.client}" id="client"  class="form-control"></div>
-                   </div>
-                   <!-- <div class="form-group">        
-                     <label class="form-label col-md-4" for="client_thumb">Client Thumbnail URL</label>
-                     <div class="col-md-8">
-                       <input type="text" name="client_thumb" value="{__.urls.client_thumb}" id="client_thumb" class="form-control">           
-                     </div>
-                   </div> -->
-                   
-                   
-                   
-                   <div class="form-group">
-                     <hr />
-                     <input type="submit" value="Save Changes" class="btn btn-lg btn-success">
-                   </div>
-                   <input type="hidden" name="index" value="{$selected-room-id}" id="room_index">
-                   <input type="hidden" name="roomtype" value="{__.type}" id="room_type">
-                 </form>
-                
-                
-               </div>
-               <div class="tab-pane {__.urls.control_thumb | then :active}" id="tab-exits">        
-                 <h3>Exits</h3>
-                 <div class="row">      
-                   <div class="col-md-6">
-                     <h4>Current Exits</h4>
-                     <ul class="list-group">
-                       {begin exists | each data {__in.exits | list from-json}}
-                         <li class="exit-listing list-group-item" data-value="{_key}">
-                           <img src="{$game.rooms.{_value.room}.urls.control_thumb}" width="40" height="40">
-                           {$game.rooms.{_value.room}.name}
-                           <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
-                         </li>
-                       {end exists}
-                     </ul>
-                   </div>
-                   <div class="col-md-6">
-                     <form id="add-exit-form" class="form form-vertical">
-                       <h4>Add an Exit To:</h4>
-                       <div class="form-group">
-                         <select name="exit-id" id="add-an-exit" class="form-control">
-                           {begin rooms | each data $game.rooms}
-                             <option value="{_key}">{_value.name}</option>
-                           {end rooms}
-                         </select>
-                       </div>
-                       <input type="submit" value="Add Exit" class="btn btn-large btn-default">
-                     </form>
-                   </div>
-                 </div>
-               </div>
-             </div>
+            <!-- Tab panes -->
+            <div class="tab-content">
+              <div class="tab-pane {__.urls.control_thumb | then "" else :active}" id="tab-assets">
+               
+                <form id="room-form" class="form form-horizontal">
+                  <textarea id="exits" name="exits" width="60" height="3" style="display:none;">{__.exits}</textarea>    
+                  <hr />
+                  <div class="form-group">
+                    <label class="form-label col-md-4" for="control">Room Name</label>                   
+                    <div class="col-md-8">
+                      <input type="text" name="name" value="{__.name}" id="name" class="form-control input-lg" placeholder="Room Name">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label col-md-4" for="control">Room Type</label>                   
+                    <div class="col-md-8">
+                      <select name="roomtype">
+                        <option value="text">Text</option>
+                        <option value="image" {__.type | eq :image | then :selected}>Picture</option>
+                        <option value="video" {__.type | eq :video | then :selected}>Video</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <hr />
+                  
+                  {begin image-admin | >image-admin-template ||}
+                    <h4>Control <small>The interactive screen.</small></h4>
+                    <div class="form-group">
+                      <label class="form-label col-md-4" for="control">Control Video URL</label>
+                      <div class="col-md-8"><input type="text" name="control" value="{__.urls.control}" id="control"  class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label col-md-4" for="control_thumb">Control Thumbnail URL</label>
+                      <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
+                    </div>
+                    <hr>
+                  {end image}
+            
+                  {begin text-admin | >text-admin-template ||}
+                    <div class="form-group">
+                      <p><label class="form-label col-md-4" for="roomtext">Room content</label></p>
+                      <div class="col-md-8">
+                        <textarea rows="10" cols="80" name="roomtext">{__.text}</textarea>
+                      </div>
+                    </div>
+                  {end text}
+            
+            
+                  { _room.type | eq :text | not
+                  | then _image-admin-template else _text-admin-template 
+                  | run}
+                  
+                  
+                  <!--
+                    <h4>Client <small>The projected/secondary screen.</small></h4>
+                    <div class="form-group">
+                      <label class="form-label col-md-4" for="client">Client Video URL</label>
+                      <div class="col-md-8"><input type="text" name="client" value="{__.urls.client}" id="client"  class="form-control"></div>
+                    </div>
+                    <div class="form-group">        
+                      <label class="form-label col-md-4" for="client_thumb">Client Thumbnail URL</label>
+                      <div class="col-md-8">
+                        <input type="text" name="client_thumb" value="{__.urls.client_thumb}" id="client_thumb" class="form-control">           
+                      </div>
+                    </div> 
+                  -->
+                  
+                  
+                  <div class="form-group">
+                    <hr />
+                    <input type="submit" value="Save Changes" class="btn btn-lg btn-success">
+                  </div>
+                  <input type="hidden" name="index" value="{$selected-room-id}" id="room_index">
+                </form>
+               
+               
+              </div>
+              <div class="tab-pane {__.urls.control_thumb | then :active}" id="tab-exits">        
+                <h3>Exits</h3>
+                <div class="row">      
+                  <div class="col-md-6">
+                    <h4>Current Exits</h4>
+                    <ul class="list-group">
+                      {begin exists | each data {__in.exits | list from-json}}
+                        <li class="exit-listing list-group-item" data-value="{_key}">
+                          <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
+                          {$game.rooms.{_value.room}.name}
+                          <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
+                        </li>
+                      {end exists}
+                    </ul>
+                  </div>
+                  <div class="col-md-6">
+                    <form id="add-exit-form" class="form form-vertical">
+                      <h4>Add an Exit To:</h4>
+                      <div class="form-group">
+                        <select name="exit-id" id="add-an-exit" class="form-control">
+                          {begin rooms | each data $game.rooms}
+                            <option value="{_key}">{_value.name}</option>
+                          {end rooms}
+                        </select>
+                      </div>
+                      <input type="submit" value="Add Exit" class="btn btn-large btn-default">
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
           </script>  <!-- end show-room-div template -->      
         </div>
     </div>
