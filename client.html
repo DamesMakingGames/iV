@@ -93,8 +93,6 @@
       @set-room dom-set-html rooms
       @room-play
 
-      // @receive-data -> {__ | 12341234}
-      // TODO: check out this weird bug i made dude
       @receive-data -> store-game -> build-room-display -> @set-room
                        store-game -> make-room-packet -> @send-active
 

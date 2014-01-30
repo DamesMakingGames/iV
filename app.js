@@ -1,20 +1,20 @@
 var app = require('http').createServer(handler)
-  , fs = require('fs')
-  , io = require('socket.io').listen(app, { log: false })
-  , D = require('daimio')
+  , fs  = require('fs')
+  , io  = require('socket.io').listen(app, { log: false })
+  , D   = require('daimio')
   , mongo = require('mongodb')
-  , db = new mongo.Db('screenperfect', new mongo.Server('localhost', 27017, {auto_reconnect: true}), {w: 0});
+  , db  = new mongo.Db('iv', new mongo.Server('localhost', 27017, {auto_reconnect: true}), {w: 0});
 
 D.Etc.db = db // expose DB connection to Daimio
 
 function handler (req, res) {
   // NOTE: we're grabbing these fresh in response to each request for development. DO NOT DO THIS IN PRODUCTION.
   // move these lines outside the handler so the html is cached over the lifetime of the server.
-  var menu_html = fs.readFileSync(__dirname+'/menu.html', 'utf8')
+  var menu_html   = fs.readFileSync(__dirname+'/menu.html', 'utf8')
     , client_html = fs.readFileSync(__dirname+'/client.html', 'utf8')
     , admin_html  = fs.readFileSync(__dirname+'/admin.html', 'utf8')
-    , viz_html  = fs.readFileSync(__dirname+'/viz.html', 'utf8')
-    , daimio_js  = fs.readFileSync(__dirname+'/daimio_composite.js', 'utf8')
+    , viz_html    = fs.readFileSync(__dirname+'/viz.html', 'utf8')
+    , daimio_js   = fs.readFileSync(__dirname+'/daimio_composite.js', 'utf8')
 
   if(req.url.match(/^\/public\//)) {
     try {
