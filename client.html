@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>iV is your friend</title>
   <script type="text/javascript" src="/daimio_composite.js"></script>
+  <script type="text/javascript" src="/public/js/markdown.js"></script>
   <style>
     body { padding: 0; margin: 0;}
     .hidden {
@@ -29,7 +30,7 @@
       {end image_template}
     
       {begin text_template | >$text-template | ""}
-        <div  id="{_key}" class="fullscreen hidden">{_value.text}</div>
+        <div  id="{_key}" class="fullscreen hidden">{_value.text | string markdown}</div>
       {end text_template}
       
       {begin selection | each data $game.rooms}
@@ -176,6 +177,28 @@
       document.addEventListener("touchstart", touchHandler, true);
       document.addEventListener("touchcancel", touchHandler, true);    
     }()
+    
+    D.import_models({
+      string: {
+        methods: {
+          markdown: {
+            desc: 'Convert markdown to html',
+            params: [
+              {
+                key: 'value',
+                desc: 'A markdown string',
+                type: 'string',
+                required: true
+              },
+            ],
+            fun: function(value) {
+              return markdown.toHTML(value)
+            }
+          }
+        }
+      }
+    })
+    
     
   </script>
 

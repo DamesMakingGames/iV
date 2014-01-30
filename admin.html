@@ -2,7 +2,8 @@
 <html>
   <head>
   <title>iV Daimio Prototype Admin</title>
-  <script type="text/javascript" src="/daimio_composite.js"></script>
+    <script type="text/javascript" src="/daimio_composite.js"></script>
+    <script type="text/javascript" src="/public/js/markdown.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/public/css/bootstrap.css" rel="stylesheet">
     <link href="/public/css/styles.css" rel="stylesheet">
@@ -484,6 +485,27 @@
       document.addEventListener("touchend", touchHandler, true);
       document.addEventListener("touchcancel", touchHandler, true);    
     }()
+    
+    D.import_models({
+      string: {
+        methods: {
+          markdown: {
+            desc: 'Convert markdown to html',
+            params: [
+              {
+                key: 'value',
+                desc: 'A markdown string',
+                type: 'string',
+                required: true
+              },
+            ],
+            fun: function(value) {
+              return markdown.toHTML(value)
+            }
+          }
+        }
+      }
+    })
 
   </script>
     
