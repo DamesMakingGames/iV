@@ -128,6 +128,6 @@ io.on('connection', function (socket) {
 db.open(function(err, db) {
   if(err)
     return console.log('DB refused to open: ', err)
-  app.listen(8888)
+  app.listen(8808)
 })
 
