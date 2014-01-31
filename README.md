@@ -9,7 +9,7 @@ A system for making synchronous, hackable, interactive narrative games. Currentl
 2. `$ npm install mongodb`
 3. `$ npm install socket.io`
 4. `$ node app.js`
-4. go to server.foo:8888
+4. go to server.foo:8808
 
 Need help? Tweet at [@jennie](http://twitter.com/jennie)
 
