@@ -5,9 +5,10 @@ A system for making synchronous, hackable, interactive narrative games. Currentl
 ## Installation
 
 0. Install [Node.js](http://nodejs.org)
-1. clone the repo
-2. npm install mongodb
-3. node daimio_sp_app.js
+1. `$ git clone git@github.com:bentobx/iV.git`
+2. `$ npm install mongodb`
+3. `$ npm install socket.io`
+4. `$ node app.js`
 4. go to server.foo:8888
 
 Need help? Tweet at [@jennie](http://twitter.com/jennie)
