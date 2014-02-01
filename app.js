@@ -105,7 +105,10 @@ io.on('connection', function (socket) {
       db.collection('games', function(err, c) {
         if(game._id)
           game._id = mongo.ObjectID(game._id)
-
+        
+        if(!game.rooms)
+          game.rooms = [{"name" : "First Room","type" : "text","text" : null,"style" : null,"exits" : [ ],urls:{roomtype: "text",submit: "Add Room"}}]
+        
         c.save(game) // sync-style is ok here, because we're not waiting for confirmation
 
         db.collection('history', function(err, c) {
