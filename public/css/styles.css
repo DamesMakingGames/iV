@@ -12,3 +12,19 @@ body {
   padding: 6px;
   text-transform: uppercase;
 }
+#game div.gamespace {
+  position: absolute;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border: solid 1px #eee;
+  padding: 10px;
+  overflow: hidden;
+}
+#game div.gamespace .game-text {
+  padding: 20px;
+}
+#game div.gamespace .game-text p {
+  font-size: 24px;
+  font-weight: 900;
+}
