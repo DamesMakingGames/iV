@@ -205,7 +205,7 @@
                     <div class="form-group">
                       <label class="form-label col-md-4" for="roomtext">Room content</label>
                       <div class="col-md-8">
-                        <textarea rows="10" cols="80" name="roomtext" class="form-control">{__.text}</textarea>
+                        <textarea rows="10" cols="80" name="roomtext" class="form-control" id="room-content">{__.text}</textarea>
                         <p class="help-block">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown</a> here, as well as inline HTML, CSS, and JavaScript.</p>
                       </div>
                     </div>
@@ -428,7 +428,8 @@
   <script src="/socket.io/socket.io.js"></script>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://code.jquery.com/jquery.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="/public/js/jquery.textcomplete.js"></script>
+  
   <script src="/public/js/bootstrap.min.js"></script>
   
   <script type="text/javascript">
@@ -464,7 +465,24 @@
       D.Etc.socket = io.connect('/')
     
       OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
-    
+
+      $('#room-content').textcomplete([
+          { // html
+              match: /\[\[(\w*)$/,
+              search: function (term, callback) {
+                roomnames = []; rooms = OuterSpace.state.game.rooms; for(var key in rooms) roomnames.push(rooms[key].name)
+                
+                  callback($.map(roomnames, function (room) {
+                      return room.indexOf(term) === 0 ? room : null;
+                  }));
+              },
+              index: 1,
+              replace: function (room) {
+                  return ['[[' + room + ':', ']]'];
+              }
+          }
+      ]);
+
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       D.send_value_to_js_port(OuterSpace, 'init', {game: game_id})
@@ -549,10 +567,8 @@
           }
         }
       }
-    })
-
+    });
   </script>
-    
 </div>
 </body>
 </html>
