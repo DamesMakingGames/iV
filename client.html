@@ -5,6 +5,8 @@
   <title>iV is your friend</title>
   <script type="text/javascript" src="/daimio_composite.js"></script>
   <script type="text/javascript" src="/public/js/markdown.js"></script>
+  <link href="/public/css/bootstrap.css" rel="stylesheet">
+  <link href="/public/css/styles.css" rel="stylesheet">
   <style>
     body { padding: 0; margin: 0;}
     .hidden {
@@ -13,7 +15,7 @@
     }
   </style>
 </head>
-<body style="display:none">
+<body style="display:none" id="game">
   
   <div style="position :relative;">
     <div id="rooms" data-daimio-template="build-room-display">
@@ -25,12 +27,19 @@
       {end video_template}
     
       {begin image_template | >$image-template | ""}
-        <img src="{$control-mode | then _value.urls.control else _value.urls.client}"
-              id="{_key}" class="fullscreen hidden" width="{$game.width}" height="{$game.height}">
+        <div class="fullscreen hidden gamespace"
+          style="background-image:  url({$control-mode | then _value.urls.control else _value.urls.client});
+                            width:  {$game.width}px;
+                            height: {$game.height}px;
+                            " id="{_key}"></div>
       {end image_template}
     
       {begin text_template | >$text-template | ""}
-        <div  id="{_key}" class="fullscreen hidden">{_value.text | string markdown | string iv_parser rooms $game.rooms}</div>
+        <div  id="{_key}" class="fullscreen text hidden gamespace" style="background-image: url({_value.style}); width:{$game.width}px; height: {$game.height}px">
+          <div class="game-text">
+            {_value.text | string markdown | string iv_parser rooms $game.rooms}
+          </div>
+        </div>
       {end text_template}
       
       {begin selection | each data $game.rooms}
