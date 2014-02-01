@@ -4,6 +4,13 @@ body {
 .thumbnail.room-label {
   cursor: pointer;
 }
+.thumbnail {
+  margin-bottom: 0;
+}
+.exits-label {
+  margin: 0;
+  font-size: 12px;
+}
 .hotspot p {
   color: #000;
   font-weight: 800;

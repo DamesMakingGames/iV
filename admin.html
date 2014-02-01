@@ -42,9 +42,7 @@
         <!-- Tab panes -->
         <div class="tab-content">
           <div class="tab-pane active" id="tab-rooms">
-       
             <h2>Rooms</h2>
-       
             <form id="add-room-form" class="form-vertical">
               <div class="form-group">
                 <input type="text" name="name" id="name" class="form-control" placeholder="Room Name">
@@ -52,24 +50,33 @@
               <div class="form-group"> 
               <select name="roomtype" class="form-control">
                 <option value="text">Text</option>
-                <option value="image">Picture</option>Î
+                <option value="image">Picture</option>
                 <option value="video">Video</option>
               </select>
               </div>    
               <input type="submit" name="submit" value="Add Room" class="btn btn-large btn-default">
             </form>
-       
-            <hr />
-       
-            <div id="room-list" class="row">
+            <hr />       
+            <div id="room-list">
               <script data-daimio-template="show-all-rooms" type="text/daimio">
               {begin list | merge data $game.rooms}
+              <h5>{_name}</h5>              
+              <div class="row">
                 <div class="col-md-6">              
                   <a data-value="{_key}" class="thumbnail room-label {_key | is like $selected-room-id | then :selected else ""}">
                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" class="media-object img-responsive">
-                    <h5>{_name}</h5>
                   </a>
                 </div>
+                <div class="col-md-6">
+                  {__in.exits | then "<p class="exits-label">Exits to:</p>"} 
+                  <ul class="list-unstyled">
+                  {begin divs | merge data __in.exits}
+                    <li><a href="#" data-value="{_key}" class="room-label {_key | is like $selected-room-id | then :selected else ""}">{$game.rooms.{_room}.name}</a></li>
+                    {end divs}            
+                    </ul>
+                  </div>
+                </div>
+                <hr>
               {end list}
               </script>
             </div>
