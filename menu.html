@@ -89,27 +89,9 @@
   <script type="text/javascript">
   
     document.addEventListener('DOMContentLoaded', function() {
-
       D.Etc.socket = io.connect('/')
-
-      var template_els = [].slice.call(document.querySelectorAll('[data-daimio-template]'))
-        , templates    = template_els.reduce(function(acc, template) {
-                           var name = template.attributes.getNamedItem('data-daimio-template').value
-                           acc[name] = template.innerHTML.replace(/ \| &gt;/g, ' | >') // dumb dumb dumb
-                           template.innerHTML = ""
-                           return acc
-                         }, {})
-      
-      document.getElementsByTagName('body')[0].style.display = ''
-      
-      var seedlikes = [].slice.call(
-                        document.getElementsByClassName('spaceseeds')
-                      ).map(function(node) {
-                        return node.text
-                      }).join("\n")
-      
-      var outerseed = D.make_some_space(seedlikes, templates)
-      OuterSpace = new D.Space(outerseed) // published for debug
+    
+      OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
       
       // activate init port
       D.send_value_to_js_port(OuterSpace, 'init', 1)
