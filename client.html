@@ -29,7 +29,7 @@
       {end image_template}
     
       {begin text_template | >$text-template | ""}
-        <div  id="{_key}" class="fullscreen text hidden gamespace" style="background-image: url({_value.style}); width:{$game.width}px; height: {$game.height}px">
+        <div id="{_key}" class="fullscreen text hidden gamespace" style="background-image: url({_value.style}); width:{$game.width}px; height: {$game.height}px">
           <div class="game-text">
             {_value.text | string markdown | string iv_parser rooms $game.rooms | unquote | run}
           </div>
@@ -134,7 +134,26 @@
           if(nxt.currentTime)
             nxt.currentTime = 0;
           if(nxt.play)
-            nxt.play();          
+            nxt.play(); 
+            
+            
+          // HACKYHACKHACK
+          var room = OuterSpace.state.game.rooms[ship]
+          if(room.type == 'text') {
+            console.log('argh')
+            var roomdiv = document.getElementById(ship)
+            var dstring = '{$text-template | run with {* (:key _key :value _value)}}'
+            var scope = {key: ship, value: room}
+            D.run(dstring, OuterSpace, scope, function(value) {
+              console.log(value, dstring)
+              roomdiv.outerHTML = value
+              roomdiv = document.getElementById(ship)
+              roomdiv.classList.add('visible');
+              roomdiv.classList.remove('hidden'); 
+            })
+          }
+            
+                     
         } catch(e) {}
       }
     })
