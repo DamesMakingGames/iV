@@ -466,24 +466,23 @@
     
       OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
 
-      // $(document).on('click', (function () {
-      $(document).on('click', '#room-content', function() {
+      $(document).on('click', (function () {
         $('#room-content').textcomplete([
           { // html
-            match: /\[\[(\w*)$/g,
-            search: function (term, callback) {
-              var roomnames = []; 
-              var rooms = OuterSpace.state.game.rooms; 
-              for(var key in rooms) roomnames.push(rooms[key].name)
-              callback(roomnames);
-            },
-            index: 1,
-            replace: function (room) {
-                return ['[[' + room + ':', ']]'];
+              match: /\[\[(\w*)$/,
+              search: function (term, callback) {
+                             var roomnames = []; 
+                             var rooms = OuterSpace.state.game.rooms; 
+                             for(var key in rooms) roomnames.push(rooms[key].name)
+                             callback(roomnames);
+                           },
+              index: 1,
+              replace: function (room) {
+                  return ['[[' + room + ':', ']]'];
+              }
             }
-          }
-        ])
-      })
+          ]);
+      }))
 
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
