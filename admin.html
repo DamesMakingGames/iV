@@ -9,9 +9,9 @@
     <link href="/public/css/styles.css" rel="stylesheet">
   </head>
 
-<body style="display:none">
+<body style="display:none" id="admin">
   
-  <div class="" id="editor">
+  <div class="container" id="editor">
     <div id="header" data-daimio-template="header">
       <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -19,11 +19,6 @@
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <!-- <ul class="nav navbar-nav">
-            <li><a target="_blank" href="/{$game._id}/client" id="client-url">Client</a></li>
-            <li><a target="_blank" href="/{$game._id}/control" id="control-url">Control</a></li>      
-            <li><a target="_blank" class="popup">Both</a></li>
-          </ul> -->
           <ul class="nav navbar-nav navbar-right">
             <li><a target="_blank" href="/{$game._id}/control" id="control-url" class="popup">Launch game</a></li>
             <li><a href="/">Back to game list</a></li>
@@ -125,18 +120,31 @@
                     </div>
                   </div>
          
-                  <div class="form-group">
+                  <div class="form-group hidden">
                     <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
                     <input type="hidden" name="_id" value="{$game._id}" id="_id">
                   </div>
+
+                    <div class="form-group">
+                      <label for="" class="form-label col-md-4">Embed code</label>
+                      <div class="col-md-8">
+                      <textarea name="" id="" cols="30" rows="6" readonly class="form-control"><iframe src="http://bentodojo.com:8808/{$game._id}/control" width="{$game.width | or 640}" height="{$game.width | or 480}" scrolling="no" style="border: 0px;"></iframe></textarea>
+                      </div>
+                    </div>
+
+                
                 </script>
               </form>
-            </div>        
+              
+            </div>
+            
+                 
           </div>
         </div>           
       <div class="col-md-8">
-        <div id="room-div" style="position: relative;">
+        <div id="room-div">
           <script data-daimio-template="show-room-div" type="text/daimio">
+          <div id="room-preview">
             {__ | >room ||}
 
             {begin image | >image-template ||}
@@ -151,7 +159,7 @@
             { _room.type | eq :text | not
             | then _image-template else _text-template 
             | run}
-            
+          </div>
             
             <hr>
             
@@ -209,6 +217,7 @@
                         <p class="help-block">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown</a> here, as well as inline HTML, CSS, and JavaScript.</p>
                       </div>
                     </div>
+                    
                     <div class="form-group">
                       <label class="form-label col-md-4" for="roomtext">Room background</label>
                       <div class="col-md-8">
@@ -217,7 +226,6 @@
                       </div>
                     </div>
                     
-
                     <div class="form-group">
                       <label class="form-label col-md-4" for="control_thumb">Image Thumbnail URL</label>
                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
@@ -323,6 +331,7 @@
         | * (:name  _raw-info.name 
              :type  _raw-info.roomtype
              :text  _raw-info.roomtext
+             :linkcolor _raw-info.linkcolor
              :style _raw-info.background
              :exits {_raw-info.exits | list from-json} 
              :urls  {_raw-info | list remove by_key (:name :exits)} )
@@ -563,7 +572,9 @@
               for (var key in rooms) {
                 roomnames[rooms[key].name] = key;
               };
-              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) { return '<a href="" data-value="' + roomnames[p1] + '" class="link">' + p2 + '</a>'; });
+              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) {
+                return '<a href="" style="color:' + rooms[key].linkcolor + '" data-value="' + roomnames[p1] + '" class="link horse">' + p2 + '</a>';
+              });
             }
           }
         }
