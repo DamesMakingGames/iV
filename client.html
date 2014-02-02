@@ -31,7 +31,7 @@
       {begin text_template | >$text-template | ""}
         <div  id="{_key}" class="fullscreen text hidden gamespace" style="background-image: url({_value.style}); width:{$game.width}px; height: {$game.height}px">
           <div class="game-text">
-            {_value.text | string markdown | string iv_parser rooms $game.rooms}
+            {_value.text | string markdown | string iv_parser rooms $game.rooms | unquote | run}
           </div>
         </div>
       {end text_template}
