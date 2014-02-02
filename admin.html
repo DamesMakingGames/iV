@@ -209,6 +209,7 @@
                         <p class="help-block">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown</a> here, as well as inline HTML, CSS, and JavaScript.</p>
                       </div>
                     </div>
+                    
                     <div class="form-group">
                       <label class="form-label col-md-4" for="roomtext">Room background</label>
                       <div class="col-md-8">
@@ -217,7 +218,6 @@
                       </div>
                     </div>
                     
-
                     <div class="form-group">
                       <label class="form-label col-md-4" for="control_thumb">Image Thumbnail URL</label>
                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
@@ -323,6 +323,7 @@
         | * (:name  _raw-info.name 
              :type  _raw-info.roomtype
              :text  _raw-info.roomtext
+             :linkcolor _raw-info.linkcolor
              :style _raw-info.background
              :exits {_raw-info.exits | list from-json} 
              :urls  {_raw-info | list remove by_key (:name :exits)} )
@@ -564,7 +565,9 @@
               for (var key in rooms) {
                 roomnames[rooms[key].name] = key;
               };
-              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) { return '<a href="" data-value="' + roomnames[p1] + '" class="link">' + p2 + '</a>'; });
+              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) {
+                return '<a href="" style="color:' + rooms[key].linkcolor + '" data-value="' + roomnames[p1] + '" class="link horse">' + p2 + '</a>';
+              });
             }
           }
         }

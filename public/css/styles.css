@@ -1,5 +1,10 @@
 body {
-  margin-bottom: 30px;
+  margin: 0 0 30px 0;
+  padding: 0;
+}
+.hidden {
+  display: none !important;
+  visibility: hidden;
 }
 .thumbnail.room-label {
   cursor: pointer;
@@ -31,6 +36,12 @@ body {
 #game div.gamespace .game-text {
   padding: 20px;
 }
+#game div.gamespace .game-text a {
+  color: inherit !important;
+  text-decoration: none;
+  border-bottom: solid 2px;
+  border-bottom-color: inherit;
+}
 #game div.gamespace .game-text p {
   font-size: 24px;
   font-weight: 900;
@@ -60,3 +71,19 @@ body {
 .dropdown-menu a:hover {
   cursor: pointer;
 }
+/*
+#editor {
+	height: 570px;
+	position: relative;
+}
+#tab-rooms {
+    user-select: none;
+    position: absolute;
+    top: 0px;
+    left: -200px;
+    margin-top: 20px;
+    height: 510px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+*/

@@ -7,13 +7,7 @@
   <script type="text/javascript" src="/public/js/markdown.js"></script>
   <link href="/public/css/bootstrap.css" rel="stylesheet">
   <link href="/public/css/styles.css" rel="stylesheet">
-  <style>
-    body { padding: 0; margin: 0;}
-    .hidden {
-      display: none !important;
-      visibility: hidden;
-    }
-  </style>
+
 </head>
 <body style="display:none" id="game">
   
@@ -30,7 +24,7 @@
         <div class="fullscreen hidden gamespace"
           style="background-image:  url({$control-mode | then _value.urls.control else _value.urls.client});
                             width:  {$game.width}px;
-                            height: {$game.height}px;
+                           height: {$game.height}px;
                             " id="{_key}"></div>
       {end image_template}
     
@@ -225,7 +219,7 @@
               for (var key in rooms) {
                 roomnames[rooms[key].name] = key;
               };
-              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) { return '<a href="" data-value="' + roomnames[p1] + '" class="link">' + p2 + '</a>'; });
+              return value.replace(/\[\[(.*?):(.*?)\]\]/g, function (match, p1, p2) { return '<a href="" data-value="' + roomnames[p1] + '" class="link ham">' + p2 + '</a>'; });
             }
           }
         }
