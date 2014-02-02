@@ -11,7 +11,7 @@
 
 <body style="display:none">
   
-  <div class="container">
+  <div class="" id="editor">
     <div id="header" data-daimio-template="header">
       <nav class="navbar navbar-default" role="navigation">
         <div class="navbar-header">
@@ -32,7 +32,7 @@
       </nav>
     </div>
     <div class="row">
-      <div class="col-md-4">
+      <div class="col-md-4" id="sidebar">
        
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
@@ -466,22 +466,24 @@
     
       OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
 
+      // $(document).on('click', (function () {
       $(document).on('click', '#room-content', function() {
         $('#room-content').textcomplete([
           { // html
-              match: /\[\[(\w*)$/g,
-              search: function (term, callback) {
-                var roomnames = []; 
-                var rooms = OuterSpace.state.game.rooms; 
-                for(var key in rooms) roomnames.push(rooms[key].name)
-                callback(roomnames);
-              },
-              index: 1,
-              replace: function (room) {
-                  return ['[[' + room + ':', ']]'];
-              }
+            match: /\[\[(\w*)$/g,
+            search: function (term, callback) {
+              var roomnames = []; 
+              var rooms = OuterSpace.state.game.rooms; 
+              for(var key in rooms) roomnames.push(rooms[key].name)
+              callback(roomnames);
+            },
+            index: 1,
+            replace: function (room) {
+                return ['[[' + room + ':', ']]'];
+            }
           }
-      ])});
+        ])
+      })
 
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
