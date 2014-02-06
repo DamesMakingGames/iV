@@ -14,7 +14,7 @@
     <div id="rooms" data-daimio-template="build-room-display">
       {begin video_template | >$video-template | ""}
         <video id="{_key}" class="fullscreen hidden" style="" loop="true" width="{$game.width}" height="{$game.height}">
-          <source src="{$control-mode | then _value.urls.control else _value.urls.client}" type="video/webm">
+          <source src="{_value.urls.control}" type="video/webm">
           Your browser does not support the video tag.
         </video>
       {end video_template}
@@ -152,10 +152,6 @@
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       D.send_value_to_js_port(OuterSpace, 'init', game_id)
-
-      // activate control mode
-      if(window.location.pathname.replace(/\/$/, '').split('/').slice(-1)[0] == 'control')
-        D.send_value_to_js_port(OuterSpace, 'mode', 'control')
     })
     
     // touchy feely stuff. http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
