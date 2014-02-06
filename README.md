@@ -16,3 +16,5 @@ Need help? Tweet at [@jennie](http://twitter.com/jennie)
 ## History
 
 Concept and development by Alex Leitch for Hannah Epstein's synchronous multi-screen/device installation game PsXXYborg. Additional development support by Dann Toliver (@dxnn). Interfaces and additional support by Jennie Faber (@jennie). [ScreenPerfect](https://github.com/pretentiousgit/screenperfect-dev) is built with Daimio: https://github.com/dxnn/daimio
+
+[More info about history](http://bentobx.github.io/iV/)
