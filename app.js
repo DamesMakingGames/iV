@@ -48,7 +48,7 @@ function handler (req, res) {
     return
   }
 
-  if(req.url.match(/^\/([0-9a-f]{24})\/?$/)) {
+  if(req.url.match(/^\/([0-9a-f]{24})\/?$/) || req.url.replace(/\/$/, '').split('/').slice(-1)[0] == 'control') {
     res.writeHead(200, {"Content-Type": "text/html"})
     res.end(client_html)
     return
