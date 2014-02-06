@@ -20,7 +20,7 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
-            <li><a target="_blank" href="/{$game._id}/control" id="control-url" class="popup">Launch game</a></li>
+            <li><a target="_blank" href="/{$game._id}" id="control-url" class="popup">Launch game</a></li>
             <li><a href="/">Back to game list</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -128,7 +128,7 @@
                     <div class="form-group">
                       <label for="" class="form-label col-md-4">Embed code</label>
                       <div class="col-md-8">
-                      <textarea name="" id="" cols="30" rows="6" readonly class="form-control"><iframe src="http://bentodojo.com:8808/{$game._id}/control" width="{$game.width | or 640}" height="{$game.width | or 480}" scrolling="no" style="border: 0px;"></iframe></textarea>
+                      <textarea name="" id="" cols="30" rows="6" readonly class="form-control"><iframe src="http://bentodojo.com:8808/{$game._id}" width="{$game.width | or 640}" height="{$game.width | or 480}" scrolling="no" style="border: 0px;"></iframe></textarea>
                       </div>
                     </div>
 
@@ -473,7 +473,7 @@
     document.addEventListener('DOMContentLoaded', function() {
       D.Etc.socket = io.connect('/')
     
-      OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
+      OuterSpace = D.make_me_a_space_as_fast_as_you_can()
 
       $(document).on('click', (function () {
         $('#room-content').textcomplete([

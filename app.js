@@ -48,9 +48,43 @@ function handler (req, res) {
     return
   }
 
-  if(req.url.match(/(client|control)\/?$/)) {
+  if(req.url.match(/^\/([0-9a-f]{24})\/?$/)) {
     res.writeHead(200, {"Content-Type": "text/html"})
     res.end(client_html)
+    return
+  }
+  
+  if(req.url.replace(/\/$/, '').split('/').slice(-1)[0] == 'gamedata') {
+    res.writeHead(200, {"Content-Type": "text/json"})
+
+    try {
+      D.Etc.db.collection('games', function(err, c) {
+        c.find({}).toArray(function(err, games) {
+          res.end(JSON.stringify(games))
+        })
+      })
+    } catch (e) {return false}
+    
+    return
+  }
+  
+  if(req.url.replace(/\/$/, '').split('/').slice(-2)[0] == 'gamedata') {
+    res.writeHead(200, {"Content-Type": "text/json"})
+
+    var game_id = req.url.replace(/\/$/, '').split('/').slice(-1)[0]
+
+    if(!game_id || game_id.length != 24)
+      return '[]'
+    
+    try {
+      D.Etc.db.collection('games', function(err, c) {
+        var query = {_id: new mongo.ObjectID(game_id)}
+        c.find(query).limit(1).toArray(function(err, games) {
+          res.end(JSON.stringify(games[0]))
+        })
+      })
+    } catch (e) {return false}
+
     return
   }
 

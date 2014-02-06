@@ -7,7 +7,6 @@
   <script type="text/javascript" src="/public/js/markdown.js"></script>
   <link href="/public/css/bootstrap.css" rel="stylesheet">
   <link href="/public/css/styles.css" rel="stylesheet">
-
 </head>
 <body style="display:none" id="game">
   
@@ -22,8 +21,8 @@
     
       {begin image_template | >$image-template | ""}
         <div class="fullscreen hidden gamespace"
-          style="background-image:  url({$control-mode | then _value.urls.control else _value.urls.client});
-                            width:  {$game.width}px;
+          style="background-image: url({_value.urls.control | tap});
+                            width: {$game.width}px;
                            height: {$game.height}px;
                             " id="{_key}"></div>
       {end image_template}
@@ -37,9 +36,7 @@
       {end text_template}
       
       {begin selection | each data $game.rooms}
-        { $control-mode 
-        | then _value.urls.control 
-          else _value.urls.client
+        { _value.urls.control
         | string slice start -3 | >extension
         | cond (
            {_value.type | eq :text}                     $text-template
@@ -51,8 +48,8 @@
     </div> <!-- TODO: examine this totally freaky webkit whitespace issue -->
   
     <div id="divs" data-daimio-template="show-divs">
-      {begin divs | merge data $game.rooms.{$room-id}.exits | if {$client-mode | or {$game.rooms.{$room-id}.type | eq :text}} then "" else __}
-        <div class="clickable" data-value="{_room}"
+      {begin divs | merge data $game.rooms.{$room-id}.exits | if {$game.rooms.{$room-id}.type | eq :text} then "" else __}
+        <div class="link" data-value="{_room}"
              style="top: {_top | or 0}px; left: {_left | or 0}px; 
                     height: {_height | or 100}px; width: {_width | or 100}px; 
                     position: absolute; background-color:green; opacity: {$game.debug | then 0.4 else 0}"></div>
@@ -62,50 +59,38 @@
   
   <script id="control" type="text/daml" class="spaceseeds">
     outer
-      
+
       $game {}
       $room-id 0
-      $control-mode
-      
-      // NETWORK
-      @receive-data   socket-in  game-data
-      @request-data   socket-out request-data
-      @send-active    socket-out
-      @receive-active socket-in
+
+      // GET DATA
+      reader {"gamedata/{__in}" | run with __in | external server-read url | list from-json}
 
       @init from-js
-      @init -> @request-data
-      
-      @mode from-js
-      @mode -> {__ | >$control-mode }
-      
-      @link dom-on-click .link
-      @link -> {__ | tap} -> make-room-packet
+      @server-read 
+
+      @init -> reader -> store-game
+      reader.server-read* -> @server-read
       
       // DISPLAY 
-      change-id 
-        {__ | >$room-id}
-      store-game 
-        {__ | >$game | __.rooms | list keys | __.#1}
-      make-room-packet 
-        { __ | >in | * (:room _in :game $game._id) }
+      change-room {__ | >$room-id}
+      store-game  {__ | >$game | __.rooms | list keys | __.#1}
 
       build-room-display 
       show-divs
       
       @set-divs  dom-set-html divs
-      @set-room dom-set-html rooms
+      @set-room  dom-set-html rooms
       @room-play
 
-      @receive-data -> store-game -> build-room-display -> @set-room
-                       store-game -> make-room-packet -> @send-active
-
-      @receive-active -> change-id -> show-divs -> @set-divs
-                         change-id -> @room-play
+      store-game -> build-room-display -> @set-room
+      store-game -> change-room -> show-divs -> @set-divs
+                    change-room -> @room-play
       
-      // CLICKS
-      @clicky dom-on-click .clickable
-      @clicky -> make-room-packet
+      // INPUTS
+      @link dom-on-click .link
+      @link -> change-room
+      
   </script>
 
 
@@ -114,9 +99,9 @@
     D.import_port_flavour('room-play', {
       dir: 'out',
       outside_exit: function(ship) {
-        try {
+        try {          
           // first just pause freaking everything
-          [].slice.call(document.getElementsByTagName('video'))
+          ;[].slice.call(document.getElementsByTagName('video'))
             .forEach(function(item) {item.pause()})
           
           var cur = document.getElementsByClassName('visible')[0];
@@ -140,12 +125,12 @@
           // HACKYHACKHACK
           var room = OuterSpace.state.game.rooms[ship]
           if(room.type == 'text') {
-            console.log('argh')
+            // console.log('argh')
             var roomdiv = document.getElementById(ship)
             var dstring = '{$text-template | run with {* (:key _key :value _value)}}'
             var scope = {key: ship, value: room}
             D.run(dstring, OuterSpace, scope, function(value) {
-              console.log(value, dstring)
+              // console.log(value, dstring)
               roomdiv.outerHTML = value
               roomdiv = document.getElementById(ship)
               roomdiv.classList.add('visible');
@@ -162,11 +147,11 @@
 
       D.Etc.socket = io.connect('/')
 
-      OuterSpace = new D.make_me_a_space_as_fast_as_you_can // published for debug
+      OuterSpace = D.make_me_a_space_as_fast_as_you_can()
 
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
-      D.send_value_to_js_port(OuterSpace, 'init', {game: game_id, session: false})
+      D.send_value_to_js_port(OuterSpace, 'init', game_id)
 
       // activate control mode
       if(window.location.pathname.replace(/\/$/, '').split('/').slice(-1)[0] == 'control')
@@ -244,6 +229,49 @@
         }
       }
     })
+    
+    D.import_models({
+      external: {
+        desc: 'Commands that reach outside our universe',
+        methods: {
+          "server-read": {
+            desc: 'Get JSON over an XHR connection to the server',
+            port: 'server-read',
+            params: [
+              {
+                key: 'url',
+                desc: 'A url on the server',
+                type: 'string',
+                required: true
+              },
+            ],
+            fun: function(url, port, prior_starter) {
+              port.sync(url, prior_starter)
+              return NaN
+            } 
+          } 
+        } 
+      } 
+    })
+  
+    D.import_port_flavour('server-read', {
+      dir: 'down',
+      outside_exit: function(ship, callback) {
+        xhr_get(ship, callback)
+      }
+    })
+    
+    // load daimio file
+    function xhr_get(target, callback) {
+      var xhr = new XMLHttpRequest()
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+          callback(xhr.responseText)
+        }
+      }
+      xhr.open('GET', target, true)
+      xhr.send(null)
+    }
     
     
   </script>
