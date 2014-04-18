@@ -13,8 +13,47 @@ A system for making synchronous, hackable, interactive narrative games. Currentl
 
 Need help? Tweet at [@jennie](http://twitter.com/jennie)
 
-## History
+## Making Your First iV Game
 
-Concept and development by Alex Leitch for Hannah Epstein's synchronous multi-screen/device installation game PsXXYborg. Additional development support by Dann Toliver (@dxnn). Interfaces and additional support by Jennie Faber (@jennie). [ScreenPerfect](https://github.com/pretentiousgit/screenperfect-dev) is built with Daimio: https://github.com/dxnn/daimio
+1. Create a new game by giving it a name and clicking "Add"
+2. Click the "Edit" button.
 
-[More info about history](http://bentobx.github.io/iV/)
+This is the game editing interface.
+
+The start screen for your game has been automatically created. You can edit its name and properties by clicking on its thumbnail in the room list on the left.
+
+## Room Types
+
+iV games are made up of connecting "Rooms." The player navigates through these rooms by clicking (or tapping, on touch-screen devices) on specific areas of the screen.
+
+There are three room types in iV: Image, Video, and Text.
+
+### Image Room
+
+Set the background image by pasting a URL in the **Image URL** field. You can optionally specify a thumbnail.
+
+To add a hotspot, select an existing room from the drop down under "Add an Exit To:"
+
+With the *image* room type, you add hotspots by adding graphic hotspots anywhere in your room.
+
+### Text Room 
+
+With the *text* room type, you add them with wiki-like notation: `[[Room To Link To:Text To Display]]`
+
+Make text bold, italic, centered, red, whatever you want! Here you can also change an individual page’s background image.
+
+### Video Room
+
+With the *video* room type, you add hotspots by adding graphic hotspots anywhere in your room. (*We're currently adding the ability to animate hotspots so you can link them to moving objects in your animations/videos.*)
+
+### Using Dropbox
+
+When using Dropbox to host and serve your files, you need to use the public URL to the file, rather than the URL you get by selecting "Share Link."
+
+The URL should look something like:
+https://dl.dropboxusercontent.com/u/12345678/filename.gif
+
+**NOT** like:
+https://dl-web.dropbox.com/get/filename.gif ...
+
+Add files to you "Public" folder. Right click and select "Copy public link" You can check to ensure the file is accessible by logging out of Dropbox in your browser and entering the full URL in your address bar. If it loads there, it will load in your game.
