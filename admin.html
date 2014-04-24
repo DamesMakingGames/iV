@@ -280,7 +280,7 @@
                       {begin exists | each data {__in.exits | list from-json}}
                         <li class="exit-listing list-group-item" data-value="{_key}">
                           <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
-                          {$game.rooms.{_value.room}.name}
+													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
                           <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
                         </li>
                       {end exists}
