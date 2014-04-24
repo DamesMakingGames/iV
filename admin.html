@@ -59,6 +59,7 @@
                   <input type="text" name="filter-tag" id="filter-tag" placeholder="Filter by tag" class="form-control" value="{$filter-tag}"/>
                 </div>
                 <input type="submit" name="submit-filter" value="Filter" class="btn btn-default"/>
+                <a href="#" id="clear-filter" name="clear-filter" value="Clear" class="btn btn-default">Clear</a>
               </form>
               {begin list | merge data {$game.rooms | filter block "{({is value $filter-tag in __.tags} {$filter-tag | not}) | or }"}}
               <h5>{_name}</h5>              
@@ -340,6 +341,10 @@
       // FILTER ROOMS
       @room-filter-form dom-on-submit
       @room-filter-form -> {__.filter-tag | >$filter-tag | 0} -> show-all-rooms
+      
+      // CLEAR FILTER
+      @clear-filter dom-on-click
+      @clear-filter -> {$false | >$filter-tag | 0} -> show-all-rooms
       
       // SAVE A ROOM
       @save-game socket-out save-game
