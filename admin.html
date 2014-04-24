@@ -68,10 +68,16 @@
                   {begin divs | merge data __in.exits}
                     <li><a href="#" data-value="{_key}" class="room-label {_key | is like $selected-room-id | then :selected else ""}">{$game.rooms.{_room}.name}</a></li>
                     {end divs}            
-                    </ul>
-                  </div>
+                  </ul>
                 </div>
-                <hr>
+                <div class="col-md-6">
+                  <p class="exits-label">Actions:</p>
+                  <ul class="list-unstyled">
+                    <li><a href="#" data-value="{_key}" class="dupe-room">Duplicate</a></li>          
+                  </ul>
+                </div>
+              </div>
+              <hr>
               {end list}
               </script>
             </div>
@@ -360,6 +366,14 @@
       @add-room-form    dom-on-submit
       @add-room-form -> eat-room-form
       // @add-room-form -> {$game.rooms | count} -> room-changer
+
+      // DUPLICATE A ROOM
+      duplicate-room
+        { __ | >$old_room_id | $game.rooms.{$old_room_id} 
+        | list poke data $game path (:rooms {$game.rooms | count}) | >$game}
+        
+      @dupe-room dom-on-click .dupe-room
+      @dupe-room -> duplicate-room -> save-game
 
       // LIST EXISTS
       highlight-exit {__}
