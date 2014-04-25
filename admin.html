@@ -33,6 +33,7 @@
         <ul class="nav nav-tabs">
           <li class="active"><a href="#tab-rooms" data-toggle="tab">Rooms</a></li>
           <li class=""><a href="#tab-game" data-toggle="tab">Game</a></li>
+          <li class=""><a href="#tab-global-exits" data-toggle="tab">Global Exits</a></li>
         </ul>
         <!-- Tab panes -->
         <div class="tab-content">
@@ -54,11 +55,18 @@
             <hr />       
             <div id="room-list">
               <script data-daimio-template="show-all-rooms" type="text/daimio">
-              {begin list | merge data $game.rooms}
+              <form id="room-filter-form" class="form-vertical">
+                <div class="form-group">
+                  <input type="text" name="filter-tag" id="filter-tag" placeholder="Search by tag or room name" class="form-control" value="{$filter-tag}"/>
+                </div>
+                <input type="submit" name="submit-filter" value="Filter" class="btn btn-default"/>
+                <a href="#" id="clear-filter" name="clear-filter" value="Clear" class="btn btn-default">Clear</a>
+              </form>
+              {begin list | merge data {$game.rooms | filter block "{({is value $filter-tag in __.tags} {is value __.name like $filter-tag} {$filter-tag | not}) | or }"}}
               <h5>{_name}</h5>              
               <div class="row">
                 <div class="col-md-6">              
-                  <a data-value="{_key}" class="thumbnail room-label {_key | is like $selected-room-id | then :selected else ""}">
+                  <a data-value="{_urls.index}" class="thumbnail room-label {{_urls.index} | is like $selected-room-id | then :selected else ""}">
                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" class="media-object img-responsive">
                   </a>
                 </div>
@@ -66,12 +74,18 @@
                   {__in.exits | then "<p class="exits-label">Exits to:</p>"} 
                   <ul class="list-unstyled">
                   {begin divs | merge data __in.exits}
-                    <li><a href="#" data-value="{_key}" class="room-label {_key | is like $selected-room-id | then :selected else ""}">{$game.rooms.{_room}.name}</a></li>
+                    <li><a href="#" data-value="{_urls.index}" class="room-label {{_urls.index} | is like $selected-room-id | then :selected else ""}">{$game.rooms.{_room}.name}</a></li>
                     {end divs}            
-                    </ul>
-                  </div>
+                  </ul>
                 </div>
-                <hr>
+                <div class="col-md-6">
+                  <p class="exits-label">Actions:</p>
+                  <ul class="list-unstyled">
+                    <li><a href="#" data-value="{_urls.index}" class="dupe-room">Duplicate</a></li>          
+                  </ul>
+                </div>
+              </div>
+              <hr>
               {end list}
               </script>
             </div>
@@ -138,7 +152,42 @@
               
             </div>
             
-                 
+            <div class="tab-pane" id="tab-global-exits">
+              <h2>Global Exits</h2>
+              <div id="global-exits">
+                <script data-daimio-template="global-exits" type="text/daimio">               
+                  <div class="row">      
+                    <div class="col-md-6">
+                      <h4>Current Exits</h4>
+                      <ul class="list-group">
+                        {begin exists | each data {$game.exits}}
+                          <li class="exit-listing list-group-item" data-value="{_key}">
+                            <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
+  													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
+                            <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
+                          </li>
+                        {end exists}
+                      </ul>
+                    </div>
+                  
+                    <div class="col-md-6">
+
+                      <form id="global-exits-form" class="form form-vertical">
+                        <h4>Add an Exit To:</h4>
+                        <div class="form-group">
+                          <select name="exit-id" id="add-an-exit" class="form-control">
+                            {begin rooms | each data $game.rooms}
+                              <option value="{_key}">{_value.name}</option>
+                            {end rooms}
+                          </select>
+                        </div>
+                        <input type="submit" value="Add Exit" class="btn btn-large btn-default">
+                      </form>
+                    </div>
+                  </div>
+                </script>    
+              </div><!-- /tab-global-exits -->
+            </div>
           </div>
         </div>           
       <div class="col-md-8">
@@ -192,6 +241,13 @@
                         <option value="image" {__.type | eq :image | then :selected}>Picture</option>
                         <option value="video" {__.type | eq :video | then :selected}>Video</option>
                       </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label col-md-4" for="control">Tags</label>                   
+                    <div class="col-md-8">
+                      <input type="text" name="tags" value='{string join value {__.tags} on ", "}' id="tags" class="form-control" placeholder="Tags">
+                      <p class="help-block">A list of tags separated by commas.</p>
                     </div>
                   </div>
                   
@@ -261,7 +317,7 @@
                       {begin exists | each data {__in.exits | list from-json}}
                         <li class="exit-listing list-group-item" data-value="{_key}">
                           <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
-                          {$game.rooms.{_value.room}.name}
+													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
                           <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
                         </li>
                       {end exists}
@@ -318,6 +374,14 @@
       changed -> show-all-rooms -> @set-room-list
       changed -> header         -> @set-header
       
+      // FILTER ROOMS
+      @room-filter-form dom-on-submit
+      @room-filter-form -> {__.filter-tag | >$filter-tag | 0} -> show-all-rooms
+      
+      // CLEAR FILTER
+      @clear-filter dom-on-click
+      @clear-filter -> {$false | >$filter-tag | 0} -> show-all-rooms
+      
       // SAVE A ROOM
       @save-game socket-out save-game
       @room-form dom-on-submit
@@ -334,6 +398,7 @@
              :linkcolor _raw-info.linkcolor
              :style _raw-info.background
              :exits {_raw-info.exits | list from-json} 
+             :tags {"{string trim value __}" | map data {string split value {_raw-info.tags} on ","}}
              :urls  {_raw-info | list remove by_key (:name :exits)} )
         | list poke data $game path (:rooms {_raw-info.index | else {$game.rooms | count}}) | >$game}
         
@@ -360,6 +425,14 @@
       @add-room-form    dom-on-submit
       @add-room-form -> eat-room-form
       // @add-room-form -> {$game.rooms | count} -> room-changer
+
+      // DUPLICATE A ROOM
+      duplicate-room
+        { __ | >$old_room_id | $game.rooms.{$old_room_id} 
+        | list poke data $game path (:rooms {$game.rooms | count}) | >$game}
+        
+      @dupe-room dom-on-click .dupe-room
+      @dupe-room -> duplicate-room -> save-game
 
       // LIST EXISTS
       highlight-exit {__}
@@ -418,7 +491,15 @@
       @set-game-data-form     dom-set-html   game-data
       @submit-game-data-form  dom-on-submit  game-data
       
+      // EDIT GLOBAL EXITS
+      global-exits
+      // @set-global-exits dom-set-html global-exits
+      
+      @set-global-exits-form     dom-set-html   global-exits
+      @submit-global-exits-form  dom-on-submit  global-exits    
+      
       changed -> game-data -> @set-game-data-form
+      changed -> global-exits -> @set-global-exits-form
       
       @submit-game-data-form -> {__ | tap | >$game | __.rooms | list from-json | >$game.rooms} -> save-game
       
@@ -580,6 +661,24 @@
         }
       }
     });
+		
+		$(document).ready(function(){
+			// for admin interface; keep that sidebar in check.
+			function resize_sidebar() {		
+				var w_height = $(window).height();
+				var rl_height = $('#room-list').offset().top
+				var sidebar_height = w_height - rl_height;
+				$('#room-list').height(sidebar_height);
+			};
+			$(window).resize(function() {
+				resize_sidebar();
+			});
+			resize_sidebar();
+
+		});
+		
+		
+		
   </script>
 </div>
 </body>
