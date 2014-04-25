@@ -154,38 +154,40 @@
             
             <div class="tab-pane" id="tab-global-exits">
               <h2>Global Exits</h2>
-              <script data-daimio-template="global-exits" type="text/daimio">               
-                <div class="row">      
-                  <div class="col-md-6">
-                    <h4>Current Exits</h4>
-                    <ul class="list-group">
-                      {begin exists | each data {$game.exits}}
-                        <li class="exit-listing list-group-item" data-value="{_key}">
-                          <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
-													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
-                          <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
-                        </li>
-                      {end exists}
-                    </ul>
-                  </div>
+              <div id="global-exits">
+                <script data-daimio-template="global-exits" type="text/daimio">               
+                  <div class="row">      
+                    <div class="col-md-6">
+                      <h4>Current Exits</h4>
+                      <ul class="list-group">
+                        {begin exists | each data {$game.exits}}
+                          <li class="exit-listing list-group-item" data-value="{_key}">
+                            <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
+  													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
+                            <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
+                          </li>
+                        {end exists}
+                      </ul>
+                    </div>
                   
-                  <div class="col-md-6">
+                    <div class="col-md-6">
 
-                    <form id="global-exits-form" class="form form-vertical">
-                      <h4>Add an Exit To:</h4>
-                      <div class="form-group">
-                        <select name="exit-id" id="add-an-exit" class="form-control">
-                          {begin rooms | each data $game.rooms}
-                            <option value="{_key}">{_value.name}</option>
-                          {end rooms}
-                        </select>
-                      </div>
-                      <input type="submit" value="Add Exit" class="btn btn-large btn-default">
-                    </form>
+                      <form id="global-exits-form" class="form form-vertical">
+                        <h4>Add an Exit To:</h4>
+                        <div class="form-group">
+                          <select name="exit-id" id="add-an-exit" class="form-control">
+                            {begin rooms | each data $game.rooms}
+                              <option value="{_key}">{_value.name}</option>
+                            {end rooms}
+                          </select>
+                        </div>
+                        <input type="submit" value="Add Exit" class="btn btn-large btn-default">
+                      </form>
+                    </div>
                   </div>
-                </div>
-              </script>    
-            </div><!-- /tab-global-exits -->     
+                </script>    
+              </div><!-- /tab-global-exits -->
+            </div>
           </div>
         </div>           
       <div class="col-md-8">
@@ -365,11 +367,9 @@
       // DISPLAY
       show-all-rooms
       header
-      global-exits
       
       @set-room-list dom-set-html room-list
       @set-header    dom-set-html header
-      @set-global-exits dom-set-html global-exits
       
       changed -> show-all-rooms -> @set-room-list
       changed -> header         -> @set-header
@@ -493,11 +493,13 @@
       
       // EDIT GLOBAL EXITS
       global-exits
+      // @set-global-exits dom-set-html global-exits
+      
       @set-global-exits-form     dom-set-html   global-exits
       @submit-global-exits-form  dom-on-submit  global-exits    
       
       changed -> game-data -> @set-game-data-form
-      changed -> game-data -> @set-global-exits-form
+      changed -> global-exits -> @set-global-exits-form
       
       @submit-game-data-form -> {__ | tap | >$game | __.rooms | list from-json | >$game.rooms} -> save-game
       
@@ -659,6 +661,24 @@
         }
       }
     });
+		
+		$(document).ready(function(){
+			// for admin interface; keep that sidebar in check.
+			function resize_sidebar() {		
+				var w_height = $(window).height();
+				var rl_height = $('#room-list').offset().top
+				var sidebar_height = w_height - rl_height;
+				$('#room-list').height(sidebar_height);
+			};
+			$(window).resize(function() {
+				resize_sidebar();
+			});
+			resize_sidebar();
+
+		});
+		
+		
+		
   </script>
 </div>
 </body>
