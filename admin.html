@@ -662,20 +662,19 @@
       }
     });
 		
-		$(document).ready(function(){
-			// for admin interface; keep that sidebar in check.
-			function resize_sidebar() {		
-				var w_height = $(window).height();
-				var rl_height = $('#room-list').offset().top
-				var sidebar_height = w_height - rl_height;
-				$('#room-list').height(sidebar_height);
-			};
-			$(window).resize(function() {
-				resize_sidebar();
-			});
-			resize_sidebar();
-
-		});
+//		$(document).ready(function(){
+//			// for admin interface; keep that sidebar in check.
+//			function resize_sidebar() {		
+//				var w_height = $(window).height();
+//				var rl_height = $('#room-list').offset().top
+//				var sidebar_height = w_height - rl_height;
+//				$('#room-list').height(sidebar_height);
+//			};
+//			$(window).resize(function() {
+//				resize_sidebar();
+//			});
+//			resize_sidebar();
+//		});
 		
 		
 		
