@@ -160,13 +160,13 @@
                     <div class="col-md-6">
                       <h4>Current Exits</h4>
                       <ul class="list-group">
-                        {begin exists | each data {$game.exits}}
+                        {begin exits | each data {$game.exits}}
                           <li class="exit-listing list-group-item" data-value="{_key}">
                             <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
   													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
-                            <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
+                            <span class="pull-right"><a href="" class="remove-global-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
                           </li>
-                        {end exists}
+                        {end exits}
                       </ul>
                     </div>
                   
@@ -223,6 +223,18 @@
               <div class="sizer" data-value="{_key}" draggable="true" style="position: absolute; bottom: 0%; right: 0%; height: 30px; width: 30px; background-color: blue"></div>
                 </div>
               {end divs}
+              
+             
+              {begin globaldivs | merge data $game.exits}
+              <div id="global-exit-{_key}" class="global-hotspot" data-value="{_key}" draggable="true"
+              style="top: {_top | or 0}px; left: {_left | or 0}px; 
+                    height: {_height | or 100}px; width: {_width | or 100}px; 
+                    position: absolute; background-color:#00ea89; opacity: 0.4">
+              <p style="text-info">{$game.rooms.{_room}.name} <br/>(Global Exit)</p>
+
+              <div class="global-sizer" data-value="{_key}" draggable="true" style="position: absolute; bottom: 0%; right: 0%; height: 30px; width: 30px; background-color: blue"></div>
+                </div>             
+              {end globaldivs}
             </div>
 
                 <form id="room-form" class="form form-horizontal">
@@ -455,6 +467,17 @@
       @add-exit-form dom-on-submit
       @add-exit-form -> add-an-exit -> save-game
       
+      // ADD A GLOBAL EXIT
+      add-global-exit
+        { $game.exits 
+        | poke {* (:room __in.exit-id 
+                   :width 100 :height 100
+                   :top 0 :left 0 :global $true)}
+        | >$game.exits}
+
+      @global-exits-form dom-on-submit
+      @global-exits-form -> add-global-exit -> save-game
+            
       // REMOVE AN EXIT      
       remove-an-exit
         { $game.rooms.{$selected-room-id}.exits 
@@ -464,6 +487,15 @@
       @remove-exit dom-on-click .remove-exit
       @remove-exit -> remove-an-exit -> save-game
       
+      // REMOVE A GLOBAL EXIT
+      remove-global-exit
+        { $game.exits 
+        | list remove by_key __in
+        | >$game.exits}
+      
+      @remove-global-exit dom-on-click .remove-global-exit
+      @remove-global-exit -> remove-global-exit -> save-game
+            
       // MOVE AN EXIT
       move-hot-spot
         { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
@@ -475,6 +507,17 @@
       @hotspot dom-on-dragend .hotspot
       @hotspot -> move-hot-spot -> save-game
       
+      // MOVE A GLOBAL EXIT
+      move-global-hot-spot
+        { __ | >e | $game.exits.{_e.value} | >exit
+        | * (:room _exit.room :width _exit.width :height _exit.height
+             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0} 
+             :left {_exit.left | add _e.offsetX | max 0})
+        | >$game.exits.{_e.value}}
+      
+      @global-hotspot dom-on-dragend .global-hotspot
+      @global-hotspot -> move-global-hot-spot -> save-game
+            
       // SIZE AN EXIT
       size-hot-spot
         { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
@@ -485,6 +528,17 @@
       
       @sizer dom-on-dragend .sizer
       @sizer -> size-hot-spot -> save-game
+
+      // SIZE A GLOBAL EXIT
+      size-global-hot-spot
+        { __ | >e | $game.exits.{_e.value} | >exit
+        | * (:room _exit.room :top _exit.top :left _exit.left
+             :width  {_exit.width  | add _e.offsetX | max 30}
+             :height {_exit.height | add _e.offsetY | minus 30 | max 30})
+        | >$game.exits.{_e.value}}
+      
+      @global-sizer dom-on-dragend .global-sizer
+      @global-sizer -> size-global-hot-spot -> save-game
       
       // EDIT GAME DATA
       game-data
@@ -496,10 +550,12 @@
       // @set-global-exits dom-set-html global-exits
       
       @set-global-exits-form     dom-set-html   global-exits
+      @set-global-exits-list     dom-set-html   global-exits
       @submit-global-exits-form  dom-on-submit  global-exits    
       
       changed -> game-data -> @set-game-data-form
       changed -> global-exits -> @set-global-exits-form
+      changed -> global-exits -> @set-global-exits-list
       
       @submit-game-data-form -> {__ | tap | >$game | __.rooms | list from-json | >$game.rooms} -> save-game
       
