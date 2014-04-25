@@ -62,7 +62,7 @@
                 <input type="submit" name="submit-filter" value="Filter" class="btn btn-default"/>
                 <a href="#" id="clear-filter" name="clear-filter" value="Clear" class="btn btn-default">Clear</a>
               </form>
-              {begin list | merge data {$game.rooms | filter block "{({is value $filter-tag in __.tags} {is value __.name like $filter-tag} {$filter-tag | not}) | or }"}}
+              {begin list | merge data {$game.rooms | filter block "{({is value $filter-tag in __.tags} {is value __.name like {"/{$filter-tag}/" | run}} {$filter-tag | not}) | or }"}}
               <h5>{_name}</h5>              
               <div class="row">
                 <div class="col-md-6">              
