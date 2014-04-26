@@ -267,7 +267,7 @@
                       <p class="help-block">A list of tags separated by commas.</p>
                     </div>
                   </div>
-                  
+                                    
                   <hr />
                   
                   {begin image-admin | >image-admin-template ||}
@@ -278,6 +278,12 @@
                     <div class="form-group">
                       <label class="form-label col-md-4" for="control_thumb">Image Thumbnail URL</label>
                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label col-md-4" for="control">Music URL</label>                   
+                      <div class="col-md-8">
+                        <input type="text" name="music" value="{__.urls.music}" id="music" class="form-control">
+                      </div>
                     </div>
                     <hr>
                   {end image}
