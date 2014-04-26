@@ -177,7 +177,7 @@
                         <div class="form-group">
                           <select name="exit-id" id="add-an-exit" class="form-control">
                             {begin rooms | each data $game.rooms}
-                              <option value="{_id}">{_value.name}</option>
+                              <option value="{_value.id}">{_value.name}</option>
                             {end rooms}
                           </select>
                         </div>
