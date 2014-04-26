@@ -120,6 +120,12 @@
                     <label for="email" class="form-label col-md-4">Author Email</label>
                     <div class="col-md-8"><input type="text" name="email" class="form-control" value="{$game.email}" /></div>
                   </div>
+                  <div class="form-group">
+                    <label for="music" class="form-label col-md-4">Background Music</label>
+                    <div class="col-md-8">
+                      <input type="text" name="music" class="form-control" value="{$game.music}" />
+                    </div>
+                  </div>
                   <p><small>Width and height lock image and video rooms to a particular resolution. Leave blank for adaptable content.</small></p>
                   <div class="form-group">
                     <label for="width" class="form-label col-md-4">Width</label>
@@ -132,8 +138,7 @@
                       <hr />
                       <input type="submit" name="submit" value="Save" class="btn btn-large btn-default">
                     </div>
-                  </div>
-         
+                  </div>       
                   <div class="form-group hidden">
                     <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
                     <input type="hidden" name="_id" value="{$game._id}" id="_id">

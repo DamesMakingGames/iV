@@ -45,6 +45,15 @@
           )
         | run with {* (:key _key :value _value)} }
       {end selection}
+      
+      {begin music}
+        <div id="music" class="music">
+          <audio loop autoplay>
+            <source src="{$game.music}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      {end music}
     </div> <!-- TODO: examine this totally freaky webkit whitespace issue -->
   
     <div id="divs" data-daimio-template="show-divs">
@@ -62,6 +71,7 @@
                     position: absolute; background-color:green; opacity: {$game.debug | then 0.4 else 0}"></div>
       {end divs}
     </div>
+    
   </div>
   
   <script id="control" type="text/daml" class="spaceseeds">
@@ -278,6 +288,6 @@
     
     
   </script>
-
+  
 </body>
 </html>
