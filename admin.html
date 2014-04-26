@@ -78,12 +78,12 @@
                     {end divs}            
                   </ul>
                 </div>
-                <!--<div class="col-md-6">
+                <div class="col-md-6">
                   <p class="exits-label">Actions:</p>
                   <ul class="list-unstyled">
                     <li><a href="#" data-value="{_id}" class="dupe-room">Duplicate</a></li>          
                   </ul>
-                </div>-->
+                </div>
               </div>
               <hr>
               {end list}
@@ -442,7 +442,7 @@
       // DUPLICATE A ROOM
       duplicate-room
         { __ | >$old_room_id | $game.rooms.{$old_room_id} 
-        | poke value {$game.rooms | count} path :id 
+        | list poke value {$game.rooms | count} path :id 
         | list poke data $game path (:rooms {$game.rooms | count})
         | >$game}
         
