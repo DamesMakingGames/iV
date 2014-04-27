@@ -24,6 +24,9 @@ body {
   padding: 6px;
   text-transform: uppercase;
 }
+#game div .link {
+  cursor: pointer;
+}
 #game div.gamespace {
   position: absolute;
   background-repeat: no-repeat;
@@ -63,12 +66,14 @@ body {
 }
 */
 #admin {
+  /*
+	#room-list {
+		overflow-y: scroll;
+		overflow-x: hidden;
+		height: 200px; 
+	}
+*/
   /* SHOULD not modify */
-}
-#admin #room-list {
-  overflow-y: scroll;
-  overflow-x: hidden;
-  height: 200px;
 }
 #admin #room-preview,
 #admin #room-div {
