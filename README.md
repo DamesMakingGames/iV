@@ -5,14 +5,11 @@ A system for making synchronous, hackable, interactive narrative games. Currentl
 ## Installation
 
 0. Install [Node.js](http://nodejs.org)
-1. Create a new directory and navigate to it. `mkdir ~/Sites/ivengine && cd $_`
-
-In a Terminal window, create a new directory and navigate to it, then run the following commands:
-
-0. `$ git clone git@github.com:bentobx/iV.git`
-1. `$ npm install mongodb`
-2. `$ npm install socket.io`
-3. `$ node app.js`
+1. In a Terminal window, create a new directory and navigate to it, then run the following commands:
+2. `$ git clone git@github.com:bentobx/iV.git`
+3. `$ npm install mongodb`
+4. `$ npm install socket.io`
+5. `$ node app.js`
 
 
 In a Web browser, navigate to http://localhost:8808/
