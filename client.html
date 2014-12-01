@@ -45,16 +45,39 @@
           )
         | run with {* (:key _key :value _value)} }
       {end selection}
+      
+      <div id="music" class="music">
+        {begin music}
+        <audio id="game-audio" src="{$game.music}" loop autoplay>
+          Your browser does not support the audio element.
+        </audio>
+        {end music}
+      </div>
+      
     </div> <!-- TODO: examine this totally freaky webkit whitespace issue -->
   
     <div id="divs" data-daimio-template="show-divs">
-      {begin divs | merge data $game.rooms.{$room-id}.exits | if {$game.rooms.{$room-id}.type | eq :text} then "" else __}
+      {begin divs | merge data {$game.rooms.{$room-id}.exits} | if {$game.rooms.{$room-id}.type | eq :text} then "" else __}
         <div class="link" data-value="{_room}"
              style="top: {_top | or 0}px; left: {_left | or 0}px; 
                     height: {_height | or 100}px; width: {_width | or 100}px; 
                     position: absolute; background-color:green; opacity: {$game.debug | then 0.4 else 0}"></div>
       {end divs}
+      
+      {begin divs | merge data $game.exits}
+        <div class="link" data-value="{_room}"
+             style="top: {_top | or 0}px; left: {_left | or 0}px; 
+                    height: {_height | or 100}px; width: {_width | or 100}px; 
+                    position: absolute; background-color:green; opacity: {$game.debug | then 0.4 else 0}"></div>
+      {end divs}
+      
+      {begin music}
+        <div id="room-music">
+          <input type="hidden" id="room-music-value" value="{if {$game.rooms.{$room-id}.urls.music} then {$game.rooms.{$room-id}.urls.music} else $game.music}"/>
+        </div>
+      {end music}
     </div>
+      
   </div>
   
   <script id="control" type="text/daml" class="spaceseeds">
@@ -81,6 +104,7 @@
       
       @set-divs  dom-set-html divs
       @set-room  dom-set-html rooms
+      @set-music don-set-html music
       @room-play
 
       store-game -> build-room-display -> @set-room
@@ -122,7 +146,20 @@
             nxt.currentTime = 0;
           if(nxt.play)
             nxt.play(); 
-            
+          
+          // switch the music if necessary 
+          var audio = document.getElementById('game-audio');
+          var roomMusic = OuterSpace.state.game.rooms[ship].urls.music
+          var gameMusic = OuterSpace.state.game.music;
+          
+          if(roomMusic && audio.src != roomMusic) {
+            audio.src=roomMusic;
+            audio.load();
+          }
+          else if (!roomMusic && audio.src != gameMusic) {
+            audio.src=gameMusic;
+            audio.load();            
+          }
             
           // HACKYHACKHACK
           var room = OuterSpace.state.game.rooms[ship]
@@ -276,6 +313,6 @@
     
     
   </script>
-
+  
 </body>
 </html>

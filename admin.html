@@ -120,6 +120,12 @@
                     <label for="email" class="form-label col-md-4">Author Email</label>
                     <div class="col-md-8"><input type="text" name="email" class="form-control" value="{$game.email}" /></div>
                   </div>
+                  <div class="form-group">
+                    <label for="music" class="form-label col-md-4">Background Music</label>
+                    <div class="col-md-8">
+                      <input type="text" name="music" class="form-control" value="{$game.music}" />
+                    </div>
+                  </div>
                   <p><small>Width and height lock image and video rooms to a particular resolution. Leave blank for adaptable content.</small></p>
                   <div class="form-group">
                     <label for="width" class="form-label col-md-4">Width</label>
@@ -132,8 +138,7 @@
                       <hr />
                       <input type="submit" name="submit" value="Save" class="btn btn-large btn-default">
                     </div>
-                  </div>
-         
+                  </div>       
                   <div class="form-group hidden">
                     <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
                     <input type="hidden" name="_id" value="{$game._id}" id="_id">
@@ -163,7 +168,7 @@
                         {begin exits | each data {$game.exits}}
                           <li class="exit-listing list-group-item" data-value="{_key}">
                             <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
-  													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
+  													<a href="#" data-value="{$game.rooms.{_value.room}.id}" class="room-label">{$game.rooms.{_value.room}.name}</a>
                             <span class="pull-right"><a href="" class="remove-global-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
                           </li>
                         {end exits}
@@ -177,7 +182,7 @@
                         <div class="form-group">
                           <select name="exit-id" id="add-an-exit" class="form-control">
                             {begin rooms | each data $game.rooms}
-                              <option value="{_id}">{_value.name}</option>
+                              <option value="{_value.id}">{_value.name}</option>
                             {end rooms}
                           </select>
                         </div>
@@ -262,7 +267,7 @@
                       <p class="help-block">A list of tags separated by commas.</p>
                     </div>
                   </div>
-                  
+                                    
                   <hr />
                   
                   {begin image-admin | >image-admin-template ||}
@@ -273,6 +278,12 @@
                     <div class="form-group">
                       <label class="form-label col-md-4" for="control_thumb">Image Thumbnail URL</label>
                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                      <label class="form-label col-md-4" for="control">Music URL</label>                   
+                      <div class="col-md-8">
+                        <input type="text" name="music" value="{__.urls.music}" id="music" class="form-control">
+                      </div>
                     </div>
                     <hr>
                   {end image}
@@ -329,7 +340,7 @@
                       {begin exists | each data {__in.exits | list from-json}}
                         <li class="exit-listing list-group-item" data-value="{_key}">
                           <img src="{$game.rooms.{_value.room}.urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" width="40" height="40">
-													<a href="#" data-value="{$game.rooms.{_value.room}.urls.index}" class="room-label">{$game.rooms.{_value.room}.name}</a>
+													<a href="#" data-value="{$game.rooms.{_value.room}.id}" class="room-label">{$game.rooms.{_value.room}.name}</a>
                           <span class="pull-right"><a href="" class="remove-exit" data-value="{_key}"><span class="glyphicon glyphicon-ban-circle" style="color: red;"></span></a></span>
                         </li>
                       {end exists}
@@ -341,7 +352,7 @@
                       <div class="form-group">
                         <select name="exit-id" id="add-an-exit" class="form-control">
                           {begin rooms | each data $game.rooms}
-                            <option value="{_id}">{_value.name}</option>
+                            <option value="{_value.id}">{_value.name}</option>
                           {end rooms}
                         </select>
                       </div>
@@ -442,7 +453,7 @@
       // DUPLICATE A ROOM
       duplicate-room
         { __ | >$old_room_id | $game.rooms.{$old_room_id} 
-        | poke value {$game.rooms | count} path :id 
+        | list poke value {$game.rooms | count} path :id 
         | list poke data $game path (:rooms {$game.rooms | count})
         | >$game}
         

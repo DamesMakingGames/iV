@@ -5,11 +5,14 @@ A system for making synchronous, hackable, interactive narrative games. Currentl
 ## Installation
 
 0. Install [Node.js](http://nodejs.org)
-1. `$ git clone git@github.com:bentobx/iV.git`
-2. `$ npm install mongodb`
-3. `$ npm install socket.io`
-4. `$ node app.js`
-4. go to server.foo:8808
+1. In a Terminal window, create a new directory and navigate to it, then run the following commands:
+2. `$ git clone git@github.com:bentobx/iV.git`
+3. `$ npm install mongodb`
+4. `$ npm install socket.io`
+5. `$ node app.js`
+
+
+In a Web browser, navigate to http://localhost:8808/
 
 Need help? Tweet at [@jennie](http://twitter.com/jennie)
 
