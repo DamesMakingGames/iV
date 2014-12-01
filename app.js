@@ -136,6 +136,7 @@ io.on('connection', function (socket) {
 
   socket.on('save-game', function (game) {
     try {
+        
       db.collection('games', function(err, c) {
         if(game._id)
           game._id = mongo.ObjectID(game._id)

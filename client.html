@@ -91,6 +91,8 @@
       @link dom-on-click .link
       @link -> change-room
       
+      @autoswitch from-js
+      @autoswitch -> change-room
   </script>
 
 
@@ -152,6 +154,9 @@
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       D.send_value_to_js_port(OuterSpace, 'init', game_id)
+      
+      // setTimeout(function() { D.send_value_to_js_port(OuterSpace, 'autoswitch', 0) }, 300)
+      
     })
     
     // touchy feely stuff. http://stackoverflow.com/questions/5186441/javascript-drag-and-drop-for-touch-devices
