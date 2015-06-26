@@ -1,6 +1,6 @@
-<!doctype html> 
-<html> 
-<head> 
+<!doctype html>
+<html>
+<head>
   <meta charset="utf-8">
   <title>iV Daimio Prototype Visualizer</title>
   <script type="text/javascript" src="/daimio_composite.js"></script>
@@ -14,21 +14,21 @@
   <h1 id="header" data-daimio-template="header">
     {$game.name}
   </h1>
-  
+
   <ul id="room-list" data-daimio-template="show-all-rooms" style="float:left;position:relative;">
     <h2>Rooms</h2>
-    
+
     {begin foo | reduce data $game.rooms | tap}
       {__ | }
     {end foo}
-    
+
     {((1 2) (2 3 4) (3 4) (4 2)) | reduce block "{__ | is in {_total | list union} | then _total else }"}
 
 reduce(function(acc, item) {
   item.slice(1).forEach(function(ref) {
-    if(acc.indexOf(x[ref])<0) 
-      acc.push(x[ref])}); 
-      return acc}, 
+    if(acc.indexOf(x[ref])<0)
+      acc.push(x[ref])});
+      return acc},
         [x[0]])
 
     {begin list | merge data $game.rooms}
@@ -40,7 +40,7 @@ reduce(function(acc, item) {
            </strong>
            asdfasdf {_exits} kjfkfj
          </a>
-         
+
          <ul>
            {begin exists | each data {_exits | list from-json}}
              <li class="exit-listing" data-value="{_key}">
@@ -51,62 +51,62 @@ reduce(function(acc, item) {
              </li>
            {end exists}
          </ul>
-         
+
        </li>
     {end list}
-    
+
   </ul>
-  
+
   <script id="control" type="text/daml" class="spaceseeds">
     outer
-      
+
       $game {}
       $selected-room-id -1
-      
+
       // NETWORK
       @game-data    socket-in  game-data
       @request-data socket-out request-data
-      
+
       @init from-js
       @init -> @request-data
-      
+
       changed   {__}
       @game-data -> {__ | >$game | 0} -> changed
-      
+
       // DISPLAY
       show-all-rooms
       header
-      
+
       @set-room-list dom-set-html room-list
       @set-header    dom-set-html header
-      
+
       changed -> show-all-rooms -> @set-room-list
       changed -> header         -> @set-header
-      
+
       // SAVE A ROOM
       @save-game socket-out save-game
       @room-form dom-on-submit
-      
+
       save-game {__}
       save-game -> changed
       save-game -> @save-game
 
       eat-room-form
         { __ | >raw-info
-        | * (:name  _raw-info.name 
-             :exits {_raw-info.exits | list from-json} 
+        | * (:name  _raw-info.name
+             :exits {_raw-info.exits | list from-json}
              :urls  {_raw-info | list remove by_key (:name :exits)} )
         | list poke data $game path (:rooms {_raw-info.index | else {$game.rooms | count}}) | >$game}
-        
+
       @room-form -> eat-room-form -> save-game
-      
+
       // SELECT A ROOM
       show-room-div
       room-changer
         { __ | >$selected-room-id}
       selected-room-only
         {$selected-room-id | eq -1 | else "{1 | >@good}" | run}
-      
+
       @change-room   dom-on-click .room-label
       @set-room-div  dom-set-html  room-div
 
@@ -114,7 +114,7 @@ reduce(function(acc, item) {
       @change-room -> room-changer -> changed
       changed -> selected-room-only
       selected-room-only.good -> {$game.rooms.{$selected-room-id}} -> show-room-div  -> @set-room-div
-      
+
       // ADD A ROOM
       @add-room-form    dom-on-submit
       @add-room-form -> eat-room-form
@@ -122,45 +122,45 @@ reduce(function(acc, item) {
 
       // LIST EXISTS
       highlight-exit {__}
-      
+
       @tweak-style
       @over-exit dom-on-mouseover .exit-listing
       @out-exit  dom-on-mouseout  .exit-listing
 
       @over-exit -> {* (:id {("exit-" __in) | join} :attr "background-color" :value :yellow)} -> @tweak-style
       @out-exit  -> {* (:id {("exit-" __in) | join} :attr "background-color" :value :green)}  -> @tweak-style
-    
+
       // ADD AN EXIT
       add-an-exit
-        { $game.rooms.{$selected-room-id}.exits 
-        | poke {* (:room __in.exit-id 
+        { $game.rooms.{$selected-room-id}.exits
+        | poke {* (:room __in.exit-id
                    :width 100 :height 100
                    :top 0 :left 0)}
         | >$game.rooms.{$selected-room-id}.exits}
 
       @add-exit-form dom-on-submit
       @add-exit-form -> add-an-exit -> save-game
-      
-      // REMOVE AN EXIT      
+
+      // REMOVE AN EXIT
       remove-an-exit
-        { $game.rooms.{$selected-room-id}.exits 
+        { $game.rooms.{$selected-room-id}.exits
         | list remove by_key __in
         | >$game.rooms.{$selected-room-id}.exits}
-      
+
       @remove-exit dom-on-click .remove-exit
       @remove-exit -> remove-an-exit -> save-game
-      
+
       // MOVE AN EXIT
       move-hot-spot
         { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
         | * (:room _exit.room :width _exit.width :height _exit.height
-             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0} 
+             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0}
              :left {_exit.left | add _e.offsetX | max 0})
         | >$game.rooms.{$selected-room-id}.exits.{_e.value}}
-      
+
       @hotspot dom-on-dragend .hotspot
       @hotspot -> move-hot-spot -> save-game
-      
+
       // SIZE AN EXIT
       size-hot-spot
         { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
@@ -168,12 +168,12 @@ reduce(function(acc, item) {
              :width  {_exit.width  | add _e.offsetX | max 30}
              :height {_exit.height | add _e.offsetY | minus 30 | max 30})
         | >$game.rooms.{$selected-room-id}.exits.{_e.value}}
-      
+
       @sizer dom-on-dragend .sizer
       @sizer -> size-hot-spot -> save-game
-      
-      
-      
+
+
+
       // TODO: exits GUI
       // TODO: add 'parent' to history
       // TODO: munge html and daimio code in html templates separately (like {3 | >$x} -> {3 | &gt;x})
@@ -182,7 +182,7 @@ reduce(function(acc, item) {
       // TODO: shift to show greens in control
       // YAGNI: local machine refs
       // YAGNI: whitespace chomping
-      
+
   </script>
 
 
@@ -199,11 +199,11 @@ reduce(function(acc, item) {
           event.value = value
           self.enter(D.scrub_var(event))
         }
-        
+
         D.track_event('dragend', this.settings.thing, fun)
       }
     })
-  
+
     D.import_port_flavour('tweak-style', {
       dir: 'out',
       outside_exit: function(ship) {
@@ -211,16 +211,16 @@ reduce(function(acc, item) {
           var el = document.getElementById(ship.id)
           if(!el) return false
 
-          el.style[ship.attr] = ship.value        
+          el.style[ship.attr] = ship.value
         } catch(e) {}
       }
     })
-  
-  
+
+
     document.addEventListener('DOMContentLoaded', function() {
-      
+
       D.Etc.socket = io.connect('/')
-      
+
       var template_els = [].slice.call(document.querySelectorAll('[data-daimio-template]'))
         , templates    = template_els.reduce(function(acc, template) {
                            var name = template.attributes.getNamedItem('data-daimio-template').value
@@ -230,21 +230,21 @@ reduce(function(acc, item) {
                          }, {})
 
       document.getElementsByTagName('body')[0].style.display = ''
-                       
+
       var seedlikes = Array.prototype.slice.call(
                         document.getElementsByClassName('spaceseeds')
                       ).map(function(node) {
                         return node.text
                       }).join("\n")
-      
+
       var outerseed = D.make_some_space(seedlikes, templates)
       OuterSpace = new D.Space(outerseed) // published for debug
-      
+
       // activate init port
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       var data = {game: game_id} // {game: '5275ec64388d57ccb2f87d0e'}
       D.send_value_to_js_port(OuterSpace, 'init', data)
-      
+
     })
   </script>
 

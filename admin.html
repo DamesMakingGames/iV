@@ -10,7 +10,7 @@
   </head>
 
 <body style="display:none" id="admin">
-  
+
   <div class="container" id="editor">
     <div id="header" data-daimio-template="header">
       <nav class="navbar navbar-default" role="navigation">
@@ -28,7 +28,7 @@
     </div>
     <div class="row">
       <div class="col-md-4" id="sidebar">
-       
+
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
           <li class="active"><a href="#tab-rooms" data-toggle="tab">Rooms</a></li>
@@ -42,17 +42,17 @@
             <form id="add-room-form" class="form-vertical">
               <div class="form-group">
                 <input type="text" name="name" id="name" class="form-control" placeholder="Room Name">
-              </div> 
-              <div class="form-group"> 
+              </div>
+              <div class="form-group">
               <select name="roomtype" class="form-control">
                 <option value="text">Text</option>
                 <option value="image">Picture</option>
                 <option value="video">Video</option>
               </select>
-              </div>    
+              </div>
               <input type="submit" name="submit" value="Add Room" class="btn btn-large btn-default">
             </form>
-            <hr />       
+            <hr />
             <div id="room-list">
               <script data-daimio-template="show-all-rooms" type="text/daimio">
               <form id="room-filter-form" class="form-vertical">
@@ -63,25 +63,25 @@
                 <a href="#" id="clear-filter" name="clear-filter" value="Clear" class="btn btn-default">Clear</a>
               </form>
               {begin list | merge data {$game.rooms | filter block "{({is value $filter-tag in __.tags} {is value __.name like {"/{$filter-tag}/" | run}} {$filter-tag | not}) | or }"}}
-              <h5>{_name}</h5>              
+              <h5>{_name}</h5>
               <div class="row">
-                <div class="col-md-6">              
+                <div class="col-md-6">
                   <a data-value="{_id}" class="thumbnail room-label {{_id} | is like $selected-room-id | then :selected else ""}">
                     <img src="{_urls.control_thumb | else "http://placehold.it/{$game.width | or 640}x{$game.height | or 480}&text={_name}" | run with {* (:name _name)}}" class="media-object img-responsive">
                   </a>
                 </div>
                 <div class="col-md-6">
-                  {__in.exits | then "<p class="exits-label">Exits to:</p>"} 
+                  {__in.exits | then "<p class="exits-label">Exits to:</p>"}
                   <ul class="list-unstyled">
                   {begin divs | merge data __in.exits}
                     <li><a href="#" data-value="{_id}" class="room-label {{_id} | is like $selected-room-id | then :selected else ""}">{$game.rooms.{_room}.name}</a></li>
-                    {end divs}            
+                    {end divs}
                   </ul>
                 </div>
                 <div class="col-md-6">
                   <p class="exits-label">Actions:</p>
                   <ul class="list-unstyled">
-                    <li><a href="#" data-value="{_id}" class="dupe-room">Duplicate</a></li>          
+                    <li><a href="#" data-value="{_id}" class="dupe-room">Duplicate</a></li>
                   </ul>
                 </div>
               </div>
@@ -90,14 +90,14 @@
               </script>
             </div>
           </div>
-          
+
           <div class="tab-pane" id="tab-game">
 
             <h2>Game</h2>
-       
+
             <form id="game-data" class="form-horizontal">
               <script data-daimio-template="game-data" type="text/daimio">
-       
+
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" name="debug" value="1" {$game.debug | then :checked else :foo}="checked"> Debug mode (Show Hotspots in Game)
@@ -138,7 +138,7 @@
                       <hr />
                       <input type="submit" name="submit" value="Save" class="btn btn-large btn-default">
                     </div>
-                  </div>       
+                  </div>
                   <div class="form-group hidden">
                     <textarea id="rooms" name="rooms" class="form-control">{$game.rooms}</textarea>
                     <input type="hidden" name="_id" value="{$game._id}" id="_id">
@@ -151,17 +151,17 @@
                       </div>
                     </div>
 
-                
+
                 </script>
               </form>
-              
+
             </div>
-            
+
             <div class="tab-pane" id="tab-global-exits">
               <h2>Global Exits</h2>
               <div id="global-exits">
-                <script data-daimio-template="global-exits" type="text/daimio">               
-                  <div class="row">      
+                <script data-daimio-template="global-exits" type="text/daimio">
+                  <div class="row">
                     <div class="col-md-6">
                       <h4>Current Exits</h4>
                       <ul class="list-group">
@@ -174,7 +174,7 @@
                         {end exits}
                       </ul>
                     </div>
-                  
+
                     <div class="col-md-6">
 
                       <form id="global-exits-form" class="form form-vertical">
@@ -190,11 +190,11 @@
                       </form>
                     </div>
                   </div>
-                </script>    
+                </script>
               </div><!-- /tab-global-exits -->
             </div>
           </div>
-        </div>           
+        </div>
       <div class="col-md-8">
         <div id="room-div">
           <script data-daimio-template="show-room-div" type="text/daimio">
@@ -208,50 +208,50 @@
             {begin text | >text-template ||}
               {__in.text | string markdown | string iv_parser rooms $game.rooms}
             {end text}
-            
-            
+
+
             { _room.type | eq :text | not
-            | then _image-template else _text-template 
+            | then _image-template else _text-template
             | run}
           </div>
-            
+
             <hr>
-            
-            
+
+
             {begin divs | merge data __in.exits}
               <div id="exit-{_key}" class="hotspot" data-value="{_key}" draggable="true"
-              style="top: {_top | or 0}px; left: {_left | or 0}px; 
-                    height: {_height | or 100}px; width: {_width | or 100}px; 
+              style="top: {_top | or 0}px; left: {_left | or 0}px;
+                    height: {_height | or 100}px; width: {_width | or 100}px;
                     position: absolute; background-color:#00ea89; opacity: 0.4">
               <p style="text-info">{$game.rooms.{_room}.name}</p>
 
               <div class="sizer" data-value="{_key}" draggable="true" style="position: absolute; bottom: 0%; right: 0%; height: 30px; width: 30px; background-color: blue"></div>
                 </div>
               {end divs}
-              
-             
+
+
               {begin globaldivs | merge data $game.exits}
               <div id="global-exit-{_key}" class="global-hotspot" data-value="{_key}" draggable="true"
-              style="top: {_top | or 0}px; left: {_left | or 0}px; 
-                    height: {_height | or 100}px; width: {_width | or 100}px; 
+              style="top: {_top | or 0}px; left: {_left | or 0}px;
+                    height: {_height | or 100}px; width: {_width | or 100}px;
                     position: absolute; background-color:#00ea89; opacity: 0.4">
               <p style="text-info">{$game.rooms.{_room}.name} <br/>(Global Exit)</p>
 
               <div class="global-sizer" data-value="{_key}" draggable="true" style="position: absolute; bottom: 0%; right: 0%; height: 30px; width: 30px; background-color: blue"></div>
-                </div>             
+                </div>
               {end globaldivs}
             </div>
 
                 <form id="room-form" class="form form-horizontal">
-                  <textarea id="exits" name="exits" width="60" height="3" style="display:none;">{__.exits}</textarea>    
+                  <textarea id="exits" name="exits" width="60" height="3" style="display:none;">{__.exits}</textarea>
                   <div class="form-group">
-                    <label class="form-label col-md-4" for="control">Room Name</label>                   
+                    <label class="form-label col-md-4" for="control">Room Name</label>
                     <div class="col-md-8">
                       <input type="text" name="name" value="{__.name}" id="name" class="form-control input-lg" placeholder="Room Name">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label col-md-4" for="control">Room Type</label>                   
+                    <label class="form-label col-md-4" for="control">Room Type</label>
                     <div class="col-md-8">
                       <select name="roomtype" class="form-control">
                         <option value="text">Text</option>
@@ -261,15 +261,15 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label class="form-label col-md-4" for="control">Tags</label>                   
+                    <label class="form-label col-md-4" for="control">Tags</label>
                     <div class="col-md-8">
                       <input type="text" name="tags" value='{string join value {__.tags} on ", "}' id="tags" class="form-control" placeholder="Tags">
                       <p class="help-block">A list of tags separated by commas.</p>
                     </div>
                   </div>
-                                    
+
                   <hr />
-                  
+
                   {begin image-admin | >image-admin-template ||}
                     <div class="form-group">
                       <label class="form-label col-md-4" for="control">Image URL</label>
@@ -280,14 +280,14 @@
                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
                     </div>
                     <div class="form-group">
-                      <label class="form-label col-md-4" for="control">Music URL</label>                   
+                      <label class="form-label col-md-4" for="control">Music URL</label>
                       <div class="col-md-8">
                         <input type="text" name="music" value="{__.urls.music}" id="music" class="form-control">
                       </div>
                     </div>
                     <hr>
                   {end image}
-            
+
                   {begin text-admin | >text-admin-template ||}
                     <div class="form-group">
                       <label class="form-label col-md-4" for="roomtext">Room content</label>
@@ -296,7 +296,7 @@
                         <p class="help-block">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" target="_blank">Markdown</a> here, as well as inline HTML, CSS, and JavaScript.</p>
                       </div>
                     </div>
-                    
+
                     <div class="form-group">
                       <label class="form-label col-md-4" for="roomtext">Room background</label>
                       <div class="col-md-8">
@@ -304,23 +304,23 @@
                         <p class="help-block">A URL pointing to a hosted image.</p>
                       </div>
                     </div>
-                    
+
                     <div class="form-group">
                       <label class="form-label col-md-4" for="control_thumb">Image Thumbnail URL</label>
                       <div class="col-md-8"><input type="text" name="control_thumb" value="{__.urls.control_thumb}" id="control_thumb"  class="form-control"></div>
                     </div>
                     <hr>
-                    
-                    
+
+
                   {end text}
-            
-            
+
+
                   { _room.type | eq :text | not
-                  | then _image-admin-template else _text-admin-template 
+                  | then _image-admin-template else _text-admin-template
                   | run}
-                  
-                  
-                  
+
+
+
                   <div class="form-group">
                     <input type="submit" value="Save Changes" class="btn btn-lg btn-success pull-right">
                   </div>
@@ -328,12 +328,12 @@
                 </form>
                 <hr />
                </div>
-        
-        
-               
+
+
+
                {begin image-exits | >image-exits-template ||}
-               
-                <div class="row">      
+
+                <div class="row">
                   <div class="col-md-6">
                     <h4>Current Exits</h4>
                     <ul class="list-group">
@@ -361,80 +361,80 @@
                   </div>
                 </div>
               {end image}
-              
+
               { _room.type | eq :text | not | then _image-exits-template | run}
-              
-              
-          </script>  <!-- end show-room-div template -->      
+
+
+          </script>  <!-- end show-room-div template -->
         </div>
     </div>
   </div>
-  
-  
+
+
   <script id="control" type="text/daml" class="spaceseeds">
     outer
-      
+
       $game {}
       $selected-room-id -1
-      
+
       // NETWORK
       @game-data    socket-in  game-data
       @request-data socket-out request-data
-      
+
       @init from-js
       @init -> @request-data
-      
+
       changed   {__}
       @game-data -> {__ | >$game | 0} -> changed
-      
+
       // DISPLAY
       show-all-rooms
       header
-      
+
       @set-room-list dom-set-html room-list
       @set-header    dom-set-html header
-      
+
       changed -> show-all-rooms -> @set-room-list
       changed -> header         -> @set-header
-      
+
       // FILTER ROOMS
       @room-filter-form dom-on-submit
       @room-filter-form -> {__.filter-tag | >$filter-tag | 0} -> show-all-rooms
-      
+
       // CLEAR FILTER
       @clear-filter dom-on-click
       @clear-filter -> {$false | >$filter-tag | 0} -> show-all-rooms
-      
+
       // SAVE A ROOM
       @save-game socket-out save-game
       @room-form dom-on-submit
-      
+
       save-game {__}
       save-game -> changed
       save-game -> @save-game
 
       eat-room-form
         { __ | >raw-info
-        | * (:name  _raw-info.name 
-             :id    {_raw-info.index | else {$game.rooms | count}}  
+        | * (:name  _raw-info.name
+             :id    {_raw-info.index | else {$game.rooms | count}}
              :type  _raw-info.roomtype
              :text  _raw-info.roomtext
              :linkcolor _raw-info.linkcolor
              :style _raw-info.background
-             :exits {_raw-info.exits | list from-json} 
+             :exits {_raw-info.exits | list from-json}
              :tags {"{string trim value __}" | map data {string split value {_raw-info.tags} on ","}}
              :urls  {_raw-info | list remove by_key (:name :exits)} )
         | list poke data $game path (:rooms {_raw-info.index | else {$game.rooms | count}}) | >$game}
-        
+
       @room-form -> eat-room-form -> save-game
-      
+
       // SELECT A ROOM
       show-room-div
       room-changer
         { __ | >$selected-room-id}
       selected-room-only
         {$selected-room-id | eq -1 | else "{1 | >@good}" | run}
-      
+
       @change-room-text dom-on-click .link
       @change-room   dom-on-click .room-label
       @set-room-div  dom-set-html  room-div
@@ -444,7 +444,7 @@
       @change-room-text -> room-changer
       changed -> selected-room-only
       selected-room-only.good -> {$game.rooms.{$selected-room-id}} -> show-room-div  -> @set-room-div
-      
+
       // ADD A ROOM
       @add-room-form    dom-on-submit
       @add-room-form -> eat-room-form
@@ -452,86 +452,86 @@
 
       // DUPLICATE A ROOM
       duplicate-room
-        { __ | >$old_room_id | $game.rooms.{$old_room_id} 
-        | list poke value {$game.rooms | count} path :id 
+        { __ | >$old_room_id | $game.rooms.{$old_room_id}
+        | list poke value {$game.rooms | count} path :id
         | list poke data $game path (:rooms {$game.rooms | count})
         | >$game}
-        
+
       @dupe-room dom-on-click .dupe-room
       @dupe-room -> duplicate-room -> save-game
 
       // LIST EXISTS
       highlight-exit {__}
-      
+
       @tweak-style
       @over-exit dom-on-mouseover .exit-listing
       @out-exit  dom-on-mouseout  .exit-listing
 
       @over-exit -> {* (:id {("exit-" __in) | join} :attr "background-color" :value :yellow)} -> @tweak-style
       @out-exit  -> {* (:id {("exit-" __in) | join} :attr "background-color" :value "#00ea89")}  -> @tweak-style
-    
+
       // ADD AN EXIT
       add-an-exit
-        { $game.rooms.{$selected-room-id}.exits 
-        | poke {* (:room __in.exit-id 
+        { $game.rooms.{$selected-room-id}.exits
+        | poke {* (:room __in.exit-id
                    :width 100 :height 100
                    :top 0 :left 0)}
         | >$game.rooms.{$selected-room-id}.exits}
 
       @add-exit-form dom-on-submit
       @add-exit-form -> add-an-exit -> save-game
-      
+
       // ADD A GLOBAL EXIT
       add-global-exit
-        { $game.exits 
-        | poke {* (:room __in.exit-id 
+        { $game.exits
+        | poke {* (:room __in.exit-id
                    :width 100 :height 100
                    :top 0 :left 0 :global $true)}
         | >$game.exits}
 
       @global-exits-form dom-on-submit
       @global-exits-form -> add-global-exit -> save-game
-            
-      // REMOVE AN EXIT      
+
+      // REMOVE AN EXIT
       remove-an-exit
-        { $game.rooms.{$selected-room-id}.exits 
+        { $game.rooms.{$selected-room-id}.exits
         | list remove by_key __in
         | >$game.rooms.{$selected-room-id}.exits}
-      
+
       @remove-exit dom-on-click .remove-exit
       @remove-exit -> remove-an-exit -> save-game
-      
+
       // REMOVE A GLOBAL EXIT
       remove-global-exit
-        { $game.exits 
+        { $game.exits
         | list remove by_key __in
         | >$game.exits}
-      
+
       @remove-global-exit dom-on-click .remove-global-exit
       @remove-global-exit -> remove-global-exit -> save-game
-            
+
       // MOVE AN EXIT
       move-hot-spot
         { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
         | * (:room _exit.room :width _exit.width :height _exit.height
-             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0} 
+             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0}
              :left {_exit.left | add _e.offsetX | max 0})
         | >$game.rooms.{$selected-room-id}.exits.{_e.value}}
-      
+
       @hotspot dom-on-dragend .hotspot
       @hotspot -> move-hot-spot -> save-game
-      
+
       // MOVE A GLOBAL EXIT
       move-global-hot-spot
         { __ | >e | $game.exits.{_e.value} | >exit
         | * (:room _exit.room :width _exit.width :height _exit.height
-             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0} 
+             :top  {_exit.top  | add _e.offsetY | subtract _exit.height | max 0}
              :left {_exit.left | add _e.offsetX | max 0})
         | >$game.exits.{_e.value}}
-      
+
       @global-hotspot dom-on-dragend .global-hotspot
       @global-hotspot -> move-global-hot-spot -> save-game
-            
+
       // SIZE AN EXIT
       size-hot-spot
         { __ | >e | $game.rooms.{$selected-room-id}.exits.{_e.value} | >exit
@@ -539,7 +539,7 @@
              :width  {_exit.width  | add _e.offsetX | max 30}
              :height {_exit.height | add _e.offsetY | minus 30 | max 30})
         | >$game.rooms.{$selected-room-id}.exits.{_e.value}}
-      
+
       @sizer dom-on-dragend .sizer
       @sizer -> size-hot-spot -> save-game
 
@@ -550,29 +550,29 @@
              :width  {_exit.width  | add _e.offsetX | max 30}
              :height {_exit.height | add _e.offsetY | minus 30 | max 30})
         | >$game.exits.{_e.value}}
-      
+
       @global-sizer dom-on-dragend .global-sizer
       @global-sizer -> size-global-hot-spot -> save-game
-      
+
       // EDIT GAME DATA
       game-data
       @set-game-data-form     dom-set-html   game-data
       @submit-game-data-form  dom-on-submit  game-data
-      
+
       // EDIT GLOBAL EXITS
       global-exits
       // @set-global-exits dom-set-html global-exits
-      
+
       @set-global-exits-form     dom-set-html   global-exits
       @set-global-exits-list     dom-set-html   global-exits
-      @submit-global-exits-form  dom-on-submit  global-exits    
-      
+      @submit-global-exits-form  dom-on-submit  global-exits
+
       changed -> game-data -> @set-game-data-form
       changed -> global-exits -> @set-global-exits-form
       changed -> global-exits -> @set-global-exits-list
-      
+
       @submit-game-data-form -> {__ | tap | >$game | __.rooms | list from-json | >$game.rooms} -> save-game
-      
+
       // TODO: exits GUI
       // TODO: add 'parent' to history
       // TODO: munge html and daimio code in html templates separately (like {3 | >$x} -> {3 | &gt;x})
@@ -581,7 +581,7 @@
       // TODO: shift to show greens in control
       // YAGNI: local machine refs
       // YAGNI: whitespace chomping
-      
+
   </script>
 
 
@@ -589,9 +589,9 @@
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://code.jquery.com/jquery.js"></script>
   <script src="/public/js/jquery.textcomplete.js"></script>
-  
+
   <script src="/public/js/bootstrap.min.js"></script>
-  
+
   <script type="text/javascript">
 
     D.import_port_flavour('dom-on-dragend', {
@@ -604,11 +604,11 @@
           event.value = value
           self.enter(D.scrub_var(event))
         }
-        
+
         D.track_event('dragend', this.settings.thing, fun)
       }
     })
-  
+
     D.import_port_flavour('tweak-style', {
       dir: 'out',
       outside_exit: function(ship) {
@@ -616,14 +616,14 @@
           var el = document.getElementById(ship.id)
           if(!el) return false
 
-          el.style[ship.attr] = ship.value        
+          el.style[ship.attr] = ship.value
         } catch(e) {}
       }
     })
-  
+
     document.addEventListener('DOMContentLoaded', function() {
       D.Etc.socket = io.connect('/')
-    
+
       OuterSpace = D.make_me_a_space_as_fast_as_you_can()
 
       $(document).on('click', (function () {
@@ -631,8 +631,8 @@
           { // html
               match: /\[\[(\w*)$/,
               search: function (term, callback) {
-                             var roomnames = []; 
-                             var rooms = OuterSpace.state.game.rooms; 
+                             var roomnames = [];
+                             var rooms = OuterSpace.state.game.rooms;
                              for(var key in rooms) roomnames.push(rooms[key].name)
                              callback(roomnames);
                            },
@@ -648,9 +648,9 @@
       var game_id = window.location.pathname.replace(/\/$/, '').split('/')[1]
       D.send_value_to_js_port(OuterSpace, 'init', {game: game_id})
     })
-    
+
     $('body').on("click",".popup",function (event) {
-      event.preventDefault();    
+      event.preventDefault();
       var control = $('#control-url').attr('href');
       window.open(control,"","directories=0,titlebar=0,toolbar=0,location=0,status=0,menubar=0,scrollbars=no,resizable=no,width=" + OuterSpace.state.game.width + ",height=" + OuterSpace.state.game.height);
     })
@@ -663,7 +663,7 @@
 
       switch(event.type) {
         case "touchstart": type="mousedown"; break;
-        case "touchmove":  type="mousemove"; break;        
+        case "touchmove":  type="mousemove"; break;
         case "touchend":   type="mouseup"; break;
         default: return;
       }
@@ -673,7 +673,7 @@
         first.clientX, first.clientY, false,
         false, false, false, 0/*left*/, null
       );
-      
+
       first.target.dispatchEvent(simulatedEvent);
       // if(dragging) event.preventDefault();
     }
@@ -682,9 +682,9 @@
       document.addEventListener("touchstart", touchHandler, true);
       document.addEventListener("touchmove", touchHandler, true);
       document.addEventListener("touchend", touchHandler, true);
-      document.addEventListener("touchcancel", touchHandler, true);    
+      document.addEventListener("touchcancel", touchHandler, true);
     }()
-    
+
     D.import_models({
       string: {
         methods: {
@@ -731,10 +731,10 @@
         }
       }
     });
-		
+
 //		$(document).ready(function(){
 //			// for admin interface; keep that sidebar in check.
-//			function resize_sidebar() {		
+//			function resize_sidebar() {
 //				var w_height = $(window).height();
 //				var rl_height = $('#room-list').offset().top
 //				var sidebar_height = w_height - rl_height;
@@ -745,9 +745,9 @@
 //			});
 //			resize_sidebar();
 //		});
-		
-		
-		
+
+
+
   </script>
 </div>
 </body>

@@ -5,12 +5,12 @@
     <script type="text/javascript" src="/daimio_composite.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/public/css/bootstrap.css" rel="stylesheet">
-    <link href="/public/css/styles.css" rel="stylesheet">    
+    <link href="/public/css/styles.css" rel="stylesheet">
   </head>
 
   <body style="display:none">
     <div class="container">
-      
+
       <div class="page-header">
         <div class="pull-right">
           <form id="add-game-form" class="form-inline">
@@ -22,13 +22,13 @@
         </div>
         <h1>Welcome to iV</h1>
       </div>
-      
+
       <ul id="game-list" data-daimio-template="show-all-games" class="media-list">
         {begin list | each data $games}
           <li class="media">
             <a class="pull-left" href="#">
               <img src="{_value.thumb}" height="100" width="100" class="media-object" >
-            </a>         
+            </a>
             <div class="media-body">
               <h4 class="media-heading">{_value.name}</h4>
               <p>By {_value.author}</p>
@@ -42,16 +42,16 @@
           <hr>
         {end list}
       </ul>
-  
+
   <script id="control" type="text/daml" class="spaceseeds">
     outer
-      
+
       $games {}
-      
+
       show-all-games
-      
+
       // GET GAME DATA
-      @server-read 
+      @server-read
       @init from-js
       @set-game-list dom-set-html game-list
 
@@ -60,15 +60,15 @@
       @init -> reader -> {__ | >$games} -> show-all-games -> @set-game-list
       reader.server-read* -> @server-read
 
-      
+
       // ADD GAME
       @save-game     socket-out     save-game
       @add-game-form dom-on-submit
       @set-name-val  dom-set-value  name
-      
+
       // make sure we have time to save the new game
       add-game-channel {process sleep for 100 | ""}
-      
+
       @add-game-form -> @save-game
       @add-game-form -> add-game-channel -> @set-name-val
                         add-game-channel -> reader
@@ -78,14 +78,14 @@
 
   <script src="/socket.io/socket.io.js"></script>
   <script type="text/javascript">
-  
+
     document.addEventListener('DOMContentLoaded', function() {
       D.Etc.socket = io.connect('/')
-    
+
       OuterSpace = D.make_me_a_space_as_fast_as_you_can()
       D.send_value_to_js_port(OuterSpace, 'init', 1)
     })
-    
+
     D.import_models({
       external: {
         desc: 'Commands that reach outside our universe',
@@ -104,19 +104,19 @@
             fun: function(url, port, prior_starter) {
               port.sync(url, prior_starter)
               return NaN
-            } 
-          } 
-        } 
-      } 
+            }
+          }
+        }
+      }
     })
-  
+
     D.import_port_flavour('server-read', {
       dir: 'down',
       outside_exit: function(ship, callback) {
         xhr_get(ship, callback)
       }
     })
-    
+
     // load daimio file
     function xhr_get(target, callback) {
       var xhr = new XMLHttpRequest()
@@ -128,7 +128,7 @@
       xhr.open('GET', target, true)
       xhr.send(null)
     }
-    
+
   </script>
 
 </body>
